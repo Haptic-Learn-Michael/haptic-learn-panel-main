@@ -1,0 +1,12 @@
+# Ignore node modules and common sensitive files
+node_modules/
+
+# Sensitive or valuable files
+*.env
+*.env.*
+*.key
+*.pem
+*.p12
+*.crt
+*.secret
+*.private
