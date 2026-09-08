@@ -105,7 +105,7 @@ const StatCard = ({
   label: string; value: string | number; sub?: string;
   icon: React.ElementType; iconBg: string; iconColor: string; loading: boolean;
 }) => (
-  <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-5 flex items-center gap-4">
+  <div className="surface border border-white/[0.08] rounded-2xl p-5 flex items-center gap-4">
     <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${iconBg}`}>
       <Icon size={22} className={iconColor} />
     </div>
@@ -396,10 +396,10 @@ export const SchoolStatsPage = () => {
 
       {loading ? (
         <div className="space-y-3">
-          {[1, 2, 3].map((i) => <div key={i} className="h-16 bg-[#22063F] border border-white/[0.08] rounded-2xl animate-pulse" />)}
+          {[1, 2, 3].map((i) => <div key={i} className="h-16 surface border border-white/[0.08] rounded-2xl animate-pulse" />)}
         </div>
       ) : classroomStats.length === 0 ? (
-        <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-10 text-center">
+        <div className="surface border border-white/[0.08] rounded-2xl p-10 text-center">
           <School size={32} className="text-white/10 mx-auto mb-3" />
           <p className="text-sm text-white/30">No hay salones en este colegio.</p>
         </div>
@@ -409,7 +409,7 @@ export const SchoolStatsPage = () => {
             const isOpen = expanded.has(c.id);
             const level = getLevel(c.avgProgress);
             return (
-              <div key={c.id} className="bg-[#22063F] border border-white/[0.08] rounded-2xl overflow-hidden transition-all">
+              <div key={c.id} className="surface border border-white/[0.08] rounded-2xl overflow-hidden transition-all">
                 {/* Classroom row */}
                 <button
                   onClick={() => toggleSalon(c.id)}

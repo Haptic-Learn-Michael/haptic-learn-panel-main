@@ -43,7 +43,7 @@ const StatCard = ({
   label: string; value: string | number; sub?: string;
   icon: React.ElementType; iconBg: string; iconColor: string; loading: boolean;
 }) => (
-  <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-5 flex items-center gap-4">
+  <div className="surface border border-white/[0.08] rounded-2xl p-5 flex items-center gap-4">
     <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${iconBg}`}>
       <Icon size={22} className={iconColor} />
     </div>
@@ -87,7 +87,7 @@ const computeAvgProgress = (summary: ClassroomSummary): number => {
 const ClassroomCardItem = ({ c, loading }: { c?: ClassroomCard; loading?: boolean }) => {
   if (loading || !c) {
     return (
-      <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-5 animate-pulse">
+      <div className="surface border border-white/[0.08] rounded-2xl p-5 animate-pulse">
         <div className="h-4 w-32 bg-white/10 rounded mb-2" />
         <div className="h-3 w-20 bg-white/[0.06] rounded mb-4" />
         <div className="h-1.5 w-full bg-white/[0.07] rounded-full" />
@@ -100,7 +100,7 @@ const ClassroomCardItem = ({ c, loading }: { c?: ClassroomCard; loading?: boolea
   return (
     <Link
       to={`/classrooms/${c.id}`}
-      className="group bg-[#22063F] border border-white/[0.08] rounded-2xl p-5 hover:border-[#FF6B35]/40 hover:bg-[#FF6B35]/[0.03] transition-all duration-150 block"
+      className="group surface border border-white/[0.08] rounded-2xl p-5 hover:border-[#FF6B35]/40 hover:bg-[#FF6B35]/[0.03] transition-all duration-150 block"
     >
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="flex items-center gap-3 min-w-0">
@@ -177,7 +177,7 @@ const AdminDashboard = ({ userName }: { userName: string }) => {
           iconBg="bg-white/[0.07]" iconColor="text-white/55" loading={loading} />
       </div>
 
-      <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-6">
+      <div className="surface border border-white/[0.08] rounded-2xl p-6">
         <h2 className="text-sm font-semibold text-white mb-4">Accesos rápidos</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
@@ -326,7 +326,7 @@ const DirectorDashboard = ({ userName }: { userName: string }) => {
           {[1, 2, 3].map((i) => <ClassroomCardItem key={i} loading />)}
         </div>
       ) : cards.length === 0 ? (
-        <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-12 text-center">
+        <div className="surface border border-white/[0.08] rounded-2xl p-12 text-center">
           <School size={32} className="text-white/10 mx-auto mb-3" />
           <p className="text-sm text-white/30">No hay salones asignados a tu cuenta.</p>
         </div>
@@ -420,7 +420,7 @@ const EducatorDashboard = ({ userName }: { userName: string }) => {
           {[1, 2].map((i) => <ClassroomCardItem key={i} loading />)}
         </div>
       ) : cards.length === 0 ? (
-        <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-12 text-center">
+        <div className="surface border border-white/[0.08] rounded-2xl p-12 text-center">
           <School size={32} className="text-white/10 mx-auto mb-3" />
           <p className="text-sm text-white/30">No estás asignada a ningún salón todavía.</p>
         </div>

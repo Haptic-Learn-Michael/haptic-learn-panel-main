@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    background-color: #1A0533;
+    background-color: #170438;
     color: #ffffff;
     font-family: 'Lexend', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -30,6 +30,78 @@
 
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 107, 53, 0.4);
+  }
+}
+
+/* ── App shell ──────────────────────────────────────────────────────────────
+   Layered ambient background (warm glow + violet undertone + film grain)
+   painted once behind every screen, instead of a single flat purple fill. */
+.app-shell {
+  position: relative;
+  isolation: isolate;
+  background-color: #170438;
+  background-image:
+    radial-gradient(1200px 640px at 90% -12%, rgba(255, 107, 53, 0.16), transparent 60%),
+    radial-gradient(900px 560px at -10% 8%, rgba(255, 209, 102, 0.10), transparent 55%),
+    radial-gradient(1100px 760px at 45% 118%, rgba(151, 71, 255, 0.14), transparent 60%);
+}
+
+.app-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.app-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+@layer components {
+  /* Card-tier surface: replaces the old flat #22063F fill with a faint
+     top sheen + inner highlight so panels read as lifted glass, not paint. */
+  .surface {
+    background:
+      linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 45%),
+      #23073e;
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  }
+
+  /* Recessed panel tier (sidebar, drawers): subtle vertical gradient. */
+  .panel {
+    background: linear-gradient(180deg, #190b30 0%, #12052a 100%);
+    box-shadow: inset -1px 0 0 0 rgba(255, 255, 255, 0.04);
+  }
+
+  /* Elevated tier (modals): a touch brighter than .surface. */
+  .elevated {
+    background:
+      linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 40%),
+      #2d0b52;
+  }
+
+  /* ── Button system (per HapticLearn design sheet) ──────────────────────── */
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 font-semibold text-white bg-[#FF6B35] hover:bg-[#e85c28] rounded-xl transition-colors shadow-[0_4px_20px_rgba(255,107,53,0.35)] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 font-semibold text-[#FF6B35] bg-[#FF6B35]/[0.06] border border-[#FF6B35]/50 hover:bg-[#FF6B35]/15 hover:border-[#FF6B35] rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-inverted {
+    @apply inline-flex items-center justify-center gap-2 font-semibold text-[#1A0533] bg-white hover:bg-white/90 rounded-xl transition-colors shadow-[0_4px_16px_rgba(255,255,255,0.18)] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-outlined {
+    @apply inline-flex items-center justify-center gap-2 font-medium text-white/70 bg-transparent border border-white/20 hover:border-white/40 hover:text-white rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
   }
 }
 

@@ -24,7 +24,7 @@ export const Modal = ({
 }: ModalProps) => (
   <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4">
     <div
-      className={`bg-[#2C0B50] border border-white/[0.08] rounded-2xl shadow-2xl w-full ${maxWidth} animate-modal-in overflow-hidden`}
+      className={`elevated border border-white/[0.08] rounded-2xl shadow-2xl w-full ${maxWidth} animate-modal-in overflow-hidden`}
     >
       {/* Gradient accent strip */}
       <div className="h-[3px] bg-gradient-to-r from-[#FF6B35] via-[#FF9A6B] to-[#FFD166]" />
@@ -107,7 +107,7 @@ export const Drawer = ({
 }: DrawerProps) => (
   <div className="fixed inset-0 z-50 flex justify-end">
     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-    <div className="relative bg-[#130328] border-l border-white/[0.08] w-[460px] max-w-[90vw] h-full flex flex-col shadow-2xl animate-drawer-in">
+    <div className="relative panel border-l border-white/[0.08] w-[460px] max-w-[90vw] h-full flex flex-col shadow-2xl animate-drawer-in">
       <div className="h-[3px] bg-gradient-to-r from-[#FF6B35] via-[#FF9A6B] to-[#FFD166] flex-shrink-0" />
       <div className="flex items-center gap-3 px-5 py-4 border-b border-white/[0.06] flex-shrink-0">
         {Icon && (
@@ -137,8 +137,19 @@ export const BtnCancel = ({ onClick, label = 'Cancelar' }: { onClick: () => void
   <button
     type="button"
     onClick={onClick}
-    className="flex-1 py-2.5 text-sm font-medium text-white/50 border border-white/10 rounded-xl hover:bg-white/[0.05] hover:text-white/70 transition-colors"
+    className="btn-outlined flex-1 py-2.5 text-sm"
   >
+    {label}
+  </button>
+);
+
+export const BtnSecondary = ({ onClick, label, icon: Icon }: { onClick: () => void; label: string; icon?: React.ElementType }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className="btn-secondary flex-1 py-2.5 text-sm"
+  >
+    {Icon && <Icon size={15} />}
     {label}
   </button>
 );
@@ -157,7 +168,7 @@ export const BtnPrimary = ({
   <button
     type="submit"
     disabled={loading || disabled}
-    className="flex-1 py-2.5 text-sm font-semibold text-white bg-[#FF6B35] hover:bg-[#e85c28] rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_20px_rgba(255,107,53,0.35)]"
+    className="btn-primary flex-1 py-2.5 text-sm"
   >
     {loading ? (loadingLabel ?? 'Guardando…') : label}
   </button>

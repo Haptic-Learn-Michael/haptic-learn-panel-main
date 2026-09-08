@@ -91,12 +91,16 @@ export const Sidebar = () => {
   );
 
   return (
-    <aside className="w-64 bg-[#130328] flex flex-col h-screen flex-shrink-0 border-r border-white/[0.06]">
+    <aside className="w-64 panel flex flex-col h-screen flex-shrink-0 border-r border-white/[0.06]">
+      {/* Accent strip — echoes the modal/drawer accent for a consistent brand thread */}
+      <div className="h-[3px] bg-gradient-to-r from-[#FF6B35] via-[#FF9A6B] to-[#FFD166] flex-shrink-0" />
+
       {/* Brand */}
       <div className="px-6 py-5 border-b border-white/[0.06]">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-[#FF6B35] rounded-xl flex items-center justify-center flex-shrink-0 shadow-[0_4px_20px_rgba(255,107,53,0.35)]">
-            <Zap size={18} className="text-white" />
+          <div className="relative w-9 h-9 bg-gradient-to-br from-[#FF8552] to-[#FF6B35] rounded-xl flex items-center justify-center flex-shrink-0 shadow-[0_4px_20px_rgba(255,107,53,0.4)] overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/25 to-transparent" />
+            <Zap size={18} className="text-white relative z-10" />
           </div>
           <div>
             <p className="text-white font-semibold text-sm leading-tight">HapticLearn</p>

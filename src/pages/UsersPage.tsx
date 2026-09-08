@@ -238,7 +238,7 @@ export const UsersPage = () => {
         </div>
       )}
 
-      <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl overflow-hidden">
+      <div className="surface border border-white/[0.08] rounded-2xl overflow-hidden">
         <div className="p-4 border-b border-white/[0.06] flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />

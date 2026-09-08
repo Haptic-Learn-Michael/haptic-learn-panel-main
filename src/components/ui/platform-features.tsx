@@ -2,6 +2,91 @@ import { useEffect, useState } from 'react';
 import CountUp from 'react-countup';
 import { Vibrate, BarChart3, Volume2 } from 'lucide-react';
 
+/* ─── Trazo de la "A" reutilizado del mockup del teléfono, en proporción
+   panorámica — visual propio de marca en vez de foto de stock genérica. ─── */
+const HERO_TRACE: Array<{ x: number; y: number }> = [
+  { x: 0.40, y: 0.86 }, { x: 0.42, y: 0.72 }, { x: 0.44, y: 0.58 },
+  { x: 0.46, y: 0.44 }, { x: 0.48, y: 0.30 }, { x: 0.50, y: 0.16 },
+  { x: 0.52, y: 0.30 }, { x: 0.54, y: 0.44 }, { x: 0.56, y: 0.58 },
+  { x: 0.58, y: 0.72 }, { x: 0.60, y: 0.86 },
+  { x: 0.45, y: 0.54 }, { x: 0.48, y: 0.54 }, { x: 0.50, y: 0.54 }, { x: 0.52, y: 0.54 }, { x: 0.55, y: 0.54 },
+];
+
+function HeroTraceVisual() {
+  const [lit, setLit] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLit((prev) => (prev >= HERO_TRACE.length - 1 ? 0 : prev + 1));
+    }, 140);
+    return () => clearInterval(interval);
+  }, []);
+  const finger = HERO_TRACE[lit];
+
+  return (
+    <div
+      className="relative w-full h-full flex items-center justify-center overflow-hidden"
+      style={{
+        background: `
+          radial-gradient(60% 90% at 50% 10%, rgba(255,107,53,0.16), transparent 65%),
+          linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 50%),
+          #1c0f34`,
+      }}
+    >
+      {/* Ghost letter behind the trace */}
+      <span
+        aria-hidden
+        style={{
+          position: 'absolute', fontFamily: "'Outfit', sans-serif", fontWeight: 900,
+          fontSize: 'min(60%, 13rem)', lineHeight: 1, color: 'rgba(255,255,255,0.05)', userSelect: 'none',
+        }}
+      >
+        A
+      </span>
+
+      {/* Dot trail */}
+      <div className="relative" style={{ width: '46%', aspectRatio: '1 / 1' }}>
+        {HERO_TRACE.map((p, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              width: 9, height: 9,
+              left: `${p.x * 100}%`, top: `${p.y * 100}%`, transform: 'translate(-50%, -50%)',
+              background: i <= lit ? '#FF6B35' : 'rgba(255,255,255,0.14)',
+              boxShadow: i <= lit ? '0 0 12px rgba(255,107,53,0.75)' : 'none',
+              transition: 'background 0.15s, box-shadow 0.15s',
+            }}
+          />
+        ))}
+        <div
+          className="absolute rounded-full pointer-events-none"
+          style={{
+            width: 26, height: 26,
+            left: `${finger.x * 100}%`, top: `${finger.y * 100}%`, transform: 'translate(-50%, -50%)',
+            background: 'rgba(255,107,53,0.22)', border: '1.5px solid rgba(255,107,53,0.85)',
+            transition: 'left 0.14s linear, top 0.14s linear',
+          }}
+        />
+      </div>
+
+      {/* Vibration bars, bottom-left — echoes the "vibración háptica" copy */}
+      <div className="absolute bottom-5 left-6 flex items-end gap-1">
+        {[6, 11, 8, 14, 9, 5].map((h, i) => (
+          <div
+            key={i}
+            className="rounded-full"
+            style={{
+              width: 3, height: h * 2, background: '#FF6B35', opacity: 0.7,
+              animation: `heroBar 1s ease-in-out ${i * 0.1}s infinite`,
+            }}
+          />
+        ))}
+      </div>
+      <style>{`@keyframes heroBar { 0%,100% { transform: scaleY(0.5) } 50% { transform: scaleY(1) } }`}</style>
+    </div>
+  );
+}
+
 /* ─── Respeta preferencias de movimiento del usuario ─── */
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -103,8 +188,6 @@ const FEATURES = [
       'El niño arrastra el dedo siguiendo el trazo exacto de cada letra. La pantalla vibra en cada punto del camino correcto — aprende la forma sin necesitar ver la pantalla.',
     name: 'Aprendizaje táctil',
     role: 'Vibración guiada en cada trazo',
-    image:
-      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&h=500&fit=crop&q=80',
     Icon: Vibrate,
     accent: '#FF6B35',
     metrics: [
@@ -150,13 +233,9 @@ function FeatureHero({ feature }: { feature: (typeof FEATURES)[number] }) {
   return (
     <div className="lg:col-span-3 rounded-3xl overflow-hidden flex flex-col" style={cardSurface}>
       <div className="relative h-64 sm:h-80 overflow-hidden group">
-        <img
-          src={feature.image}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+        <div className="w-full h-full transition-transform duration-500 group-hover:scale-105">
+          <HeroTraceVisual />
+        </div>
         <div
           className="absolute inset-0"
           style={{ background: 'linear-gradient(180deg, rgba(20,10,38,0) 35%, rgba(20,10,38,0.94) 100%)' }}

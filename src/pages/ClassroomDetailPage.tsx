@@ -624,7 +624,7 @@ export const ClassroomDetailPage = () => {
       </Link>
 
       {/* Header */}
-      <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-6 mb-5">
+      <div className="surface border border-white/[0.08] rounded-2xl p-6 mb-5">
         <div className="flex items-start gap-4">
           <div className="w-12 h-12 bg-[#FF6B35]/15 rounded-xl flex items-center justify-center flex-shrink-0">
             <GraduationCap size={24} className="text-[#FF6B35]" />
@@ -653,7 +653,7 @@ export const ClassroomDetailPage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl overflow-hidden">
+      <div className="surface border border-white/[0.08] rounded-2xl overflow-hidden">
         <div className="flex border-b border-white/[0.06]">
           {(['educators', 'students', 'courses'] as Tab[]).map((t) => {
             const labels: Record<Tab, string> = {

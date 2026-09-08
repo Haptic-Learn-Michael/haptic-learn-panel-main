@@ -230,7 +230,7 @@ export const HapticPatternsPage = () => {
         </button>
       </div>
 
-      <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl overflow-hidden">
+      <div className="surface border border-white/[0.08] rounded-2xl overflow-hidden">
         <div className="p-4 border-b border-white/[0.06] flex items-center gap-3 flex-wrap">
           <span className="text-xs font-medium text-white/35">Categoría:</span>
           <div className="flex gap-2 flex-wrap">

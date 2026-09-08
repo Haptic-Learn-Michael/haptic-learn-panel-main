@@ -303,11 +303,17 @@ export function LandingPage() {
       <div
         style={{
           minHeight: '100vh',
+          // `fixed` keeps the glow pinned to the viewport instead of the very
+          // top of a tall document, so the ambient light stays present as you
+          // scroll through stats/features/audiences instead of hitting flat
+          // black past the hero.
           background: `
-            radial-gradient(60rem 40rem at 85% -10%, rgba(255,107,53,0.08), transparent 60%),
-            radial-gradient(50rem 36rem at -10% 15%, rgba(255,209,102,0.05), transparent 55%),
+            radial-gradient(55rem 42rem at 88% 0%, rgba(255,107,53,0.11), transparent 62%),
+            radial-gradient(46rem 38rem at 4% 18%, rgba(255,209,102,0.06), transparent 58%),
+            radial-gradient(50rem 44rem at 50% 100%, rgba(151,71,255,0.09), transparent 60%),
             #140A26
           `,
+          backgroundAttachment: 'fixed',
           color: '#fff',
           fontFamily: "'Plus Jakarta Sans', sans-serif",
           overflowX: 'hidden',
@@ -475,9 +481,9 @@ export function LandingPage() {
         <div className="max-w-6xl mx-auto px-6 py-14">
           <div className="grid grid-cols-3 gap-6">
             {[
-              { val: '40+', label: 'Actividades educativas', sub: 'letras, números y braille' },
-              { val: '12', label: 'Patrones hápticos', sub: 'únicos por contenido' },
-              { val: '4', label: 'Roles de usuario', sub: 'admin · educador · alumno' },
+              { val: '40+', label: 'Actividades educativas', sub: 'letras, números y braille', Icon: Type, color: '#FF6B35' },
+              { val: '12', label: 'Patrones hápticos', sub: 'únicos por contenido', Icon: Vibrate, color: '#E8A33D' },
+              { val: '4', label: 'Roles de usuario', sub: 'admin · educador · alumno', Icon: Users, color: '#FFD166' },
             ].map((s, i) => (
               <motion.div
                 key={i}
@@ -485,9 +491,19 @@ export function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="text-center py-6 px-4 rounded-2xl"
+                className="relative text-center py-7 px-4 rounded-2xl overflow-hidden"
                 style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.06)' }}
               >
+                <div
+                  className="absolute -top-8 left-1/2 -translate-x-1/2 w-24 h-24 rounded-full pointer-events-none"
+                  style={{ background: s.color, opacity: 0.1, filter: 'blur(28px)' }}
+                />
+                <div
+                  className="relative mx-auto mb-3 w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{ background: `${s.color}18`, border: `1px solid ${s.color}30` }}
+                >
+                  <s.Icon size={17} style={{ color: s.color }} strokeWidth={2} />
+                </div>
                 <div style={{
                   fontFamily: "'Outfit', sans-serif", fontWeight: 900,
                   fontSize: 'clamp(2rem, 4vw, 3rem)',

@@ -140,7 +140,7 @@ export const ClassroomsPage = () => {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-5 animate-pulse">
+            <div key={i} className="surface border border-white/[0.08] rounded-2xl p-5 animate-pulse">
               <div className="h-5 bg-white/10 rounded-lg w-3/4 mb-3" />
               <div className="h-3 bg-white/5 rounded w-1/2 mb-4" />
               <div className="h-3 bg-white/5 rounded w-full" />
@@ -148,7 +148,7 @@ export const ClassroomsPage = () => {
           ))}
         </div>
       ) : classrooms.length === 0 ? (
-        <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-12 text-center">
+        <div className="surface border border-white/[0.08] rounded-2xl p-12 text-center">
           <School size={40} className="text-white/15 mx-auto mb-3" />
           <p className="text-white/40 text-sm">No hay salones aún.</p>
           {canCreate && (
@@ -165,7 +165,7 @@ export const ClassroomsPage = () => {
           {classrooms.map((c) => (
             <div
               key={c.id}
-              className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-5 flex flex-col hover:border-white/15 transition-colors"
+              className="surface border border-white/[0.08] rounded-2xl p-5 flex flex-col hover:border-white/15 transition-colors"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="w-10 h-10 bg-[#FF6B35]/15 rounded-xl flex items-center justify-center flex-shrink-0">

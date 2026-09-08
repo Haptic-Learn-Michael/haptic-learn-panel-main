@@ -290,7 +290,7 @@ const SchoolDrawer = ({
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3 px-5 py-4 border-b border-white/[0.06]">
-          <div className="bg-[#22063F] rounded-xl p-3 flex items-center gap-3">
+          <div className="surface rounded-xl p-3 flex items-center gap-3">
             <div className="w-8 h-8 bg-[#FFD166]/15 rounded-lg flex items-center justify-center flex-shrink-0">
               <Users size={15} className="text-[#FFD166]" />
             </div>
@@ -299,7 +299,7 @@ const SchoolDrawer = ({
               <p className="text-xs text-white/35 mt-0.5">Educadoras</p>
             </div>
           </div>
-          <div className="bg-[#22063F] rounded-xl p-3 flex items-center gap-3">
+          <div className="surface rounded-xl p-3 flex items-center gap-3">
             <div className="w-8 h-8 bg-[#FF6B35]/15 rounded-lg flex items-center justify-center flex-shrink-0">
               <School size={15} className="text-[#FF6B35]" />
             </div>
@@ -358,7 +358,7 @@ const SchoolDrawer = ({
                     return (
                       <div
                         key={se.id}
-                        className="flex items-center gap-3 bg-[#22063F] rounded-xl px-4 py-3"
+                        className="flex items-center gap-3 surface rounded-xl px-4 py-3"
                       >
                         <div className="w-8 h-8 bg-[#FFD166]/15 rounded-full flex items-center justify-center flex-shrink-0">
                           <span className="text-[#FFD166] text-xs font-semibold">
@@ -396,7 +396,7 @@ const SchoolDrawer = ({
                   {classrooms.map((c) => (
                     <div
                       key={c.id}
-                      className="flex items-center gap-3 bg-[#22063F] rounded-xl px-4 py-3"
+                      className="flex items-center gap-3 surface rounded-xl px-4 py-3"
                     >
                       <div className="w-8 h-8 bg-[#FF6B35]/15 rounded-lg flex items-center justify-center flex-shrink-0">
                         <School size={14} className="text-[#FF6B35]" />
@@ -509,7 +509,7 @@ export const SchoolsPage = () => {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-5 animate-pulse">
+            <div key={i} className="surface border border-white/[0.08] rounded-2xl p-5 animate-pulse">
               <div className="h-5 bg-white/10 rounded-lg w-3/4 mb-3" />
               <div className="h-3 bg-white/5 rounded w-1/2 mb-2" />
               <div className="h-3 bg-white/5 rounded w-2/3" />
@@ -517,7 +517,7 @@ export const SchoolsPage = () => {
           ))}
         </div>
       ) : schools.length === 0 ? (
-        <div className="bg-[#22063F] border border-white/[0.08] rounded-2xl p-12 text-center">
+        <div className="surface border border-white/[0.08] rounded-2xl p-12 text-center">
           <Building2 size={40} className="text-white/15 mx-auto mb-3" />
           <p className="text-white/40 text-sm">No hay colegios registrados aún.</p>
           {isAdmin && (
@@ -538,7 +538,7 @@ export const SchoolsPage = () => {
               <div
                 key={s.id}
                 onClick={() => setSelectedSchool(isSelected ? null : s)}
-                className={`bg-[#22063F] border rounded-2xl p-5 flex flex-col cursor-pointer transition-all ${
+                className={`surface border rounded-2xl p-5 flex flex-col cursor-pointer transition-all ${
                   isSelected
                     ? 'border-[#FF6B35]/50 shadow-[0_0_0_1px_rgba(255,107,53,0.25)]'
                     : 'border-white/[0.08] hover:border-white/20'
