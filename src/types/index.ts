@@ -45,6 +45,7 @@ export interface Classroom {
   name: string;
   description?: string;
   code: string;
+  school_id?: string | null;
   lead_educator_id: string;
   created_at: string;
   lead_educator?: { full_name: string; email: string };
