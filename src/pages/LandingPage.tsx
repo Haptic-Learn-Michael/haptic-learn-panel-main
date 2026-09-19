@@ -1,655 +1,582 @@
-import React, { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type MouseEvent as ReactMouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
-import { PlatformFeatures } from '@/components/ui/platform-features';
-import { HoverButton } from '@/components/ui/hover-button';
 import {
-  Hand,
-  Volume2,
-  BarChart3,
-  School,
-  Heart,
-  CheckCircle,
   ArrowRight,
-  Play,
-  ChevronDown,
-  Vibrate,
-  Type,
-  Smartphone,
-  Users,
+  BarChart3,
+  Check,
   GraduationCap,
+  Heart,
+  Link2,
   QrCode,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+  Type,
+  Users,
+  Vibrate,
+  Volume2,
 } from 'lucide-react';
 
-/* ─── tokens compartidos: un solo acento, una sola superficie ─── */
-const ACCENT = '#FF6B35';
-const SURFACE = { background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.07)' };
+/* Landing autocontenida: todos los estilos viven bajo `.lp` para no afectar
+   al panel (dashboard, login, etc.), que conserva su propio tema. */
 
-/* ─── animation variants ───
-   El hero lleva el único momento de entrada elaborado (blur + stagger).
-   El resto de secciones usa un fade simple para no repetir el mismo efecto
-   vistoso en cada scroll. */
-const stagger = {
-  visible: { transition: { staggerChildren: 0.09 } },
-  hidden: {},
-};
-const rise = {
-  hidden: { opacity: 0, y: 24, filter: 'blur(4px)' },
-  visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
-};
-const reveal = {
-  hidden: { opacity: 0, y: 14 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
-};
+const CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@500;600;700;800;900&display=swap');
 
-function Section({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
-  return (
-    <motion.div ref={ref} initial="hidden" animate={inView ? 'visible' : 'hidden'} variants={stagger} className={className}>
-      {children}
-    </motion.div>
-  );
+.lp {
+  --ink: #3B2A5C;
+  --ink-soft: #6B5A8E;
+  --cream: #FFF7E8;
+  --orange: #FF6B35;
+  --orange-deep: #D9491A;
+  --yellow: #FFC93C;
+  --yellow-deep: #E0A400;
+  --sky: #4CC9F0;
+  --sky-deep: #1FA3CE;
+  --mint: #2FD6A0;
+  --mint-deep: #14A97B;
+  --pink: #FF6FA8;
+  --pink-deep: #D94A85;
+  --purple: #7C4DFF;
+  --purple-deep: #5B32D6;
+  --line: #EDE3FF;
+  min-height: 100vh;
+  color: var(--ink);
+  background-color: var(--cream);
+  background-image: radial-gradient(rgba(124,77,255,0.10) 2px, transparent 2.5px);
+  background-size: 30px 30px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+.lp *, .lp *::before, .lp *::after { box-sizing: border-box; }
+.lp h1, .lp h2, .lp h3, .lp .lp-display { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 700; margin: 0; }
+.lp p { margin: 0; }
+.lp a { color: inherit; text-decoration: none; }
+
+/* ── botones tipo juguete ── */
+.lp-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+  font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 1.05rem;
+  padding: .9rem 1.6rem; border-radius: 999px; border: 0; cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+}
+.lp-btn:focus-visible { outline: 4px solid var(--purple); outline-offset: 3px; }
+.lp-btn--orange { background: var(--orange); color: #fff; box-shadow: 0 6px 0 var(--orange-deep); }
+.lp-btn--orange:hover { transform: translateY(-2px); box-shadow: 0 8px 0 var(--orange-deep); }
+.lp-btn--orange:active { transform: translateY(5px); box-shadow: 0 1px 0 var(--orange-deep); }
+.lp-btn--white { background: #fff; color: var(--ink); box-shadow: 0 6px 0 var(--line); border: 2px solid var(--line); }
+.lp-btn--white:hover { transform: translateY(-2px); box-shadow: 0 8px 0 var(--line); }
+.lp-btn--white:active { transform: translateY(5px); box-shadow: 0 1px 0 var(--line); }
+.lp-btn--sm { font-size: .95rem; padding: .6rem 1.2rem; }
+
+/* ── secciones ── */
+.lp-wrap { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+.lp-sec { padding: 5.5rem 0; position: relative; scroll-margin-top: 4.5rem; }
+@keyframes lp-arrive {
+  0%   { transform: translateY(46px) scale(.94); opacity: .35; }
+  55%  { transform: translateY(-14px) scale(1.015); opacity: 1; }
+  78%  { transform: translateY(5px) scale(.998); }
+  100% { transform: none; }
+}
+.lp-arrive { animation: lp-arrive .85s cubic-bezier(.3,.9,.4,1) both; }
+@keyframes lp-pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(255,107,53,.55); } 100% { box-shadow: 0 0 0 26px rgba(255,107,53,0); } }
+.lp-arrive .lp-pill { animation: lp-pulse-ring .9s ease-out .35s both; }
+.lp-pill {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: .9rem;
+  padding: .4rem 1rem; border-radius: 999px; border: 2px solid; background: #fff;
+}
+.lp-h2 { font-size: clamp(2rem, 4.6vw, 3.1rem); line-height: 1.1; color: var(--ink); }
+.lp-lead { font-size: 1.15rem; line-height: 1.65; color: var(--ink-soft); font-weight: 600; }
+.lp-hl { position: relative; white-space: nowrap; z-index: 0; }
+.lp-hl::after {
+  content: ''; position: absolute; left: -.1em; right: -.1em; bottom: .04em; height: .42em;
+  background: var(--yellow); border-radius: 999px; z-index: -1; transform: rotate(-1.2deg);
 }
 
-/* ─── Phone Mockup ─── */
+/* ── nav ── */
+.lp-nav {
+  position: fixed; top: .9rem; left: 0; right: 0; z-index: 50; margin: 0 auto;
+  width: calc(100% - 2rem); max-width: 1120px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .55rem .7rem .55rem 1.1rem; border-radius: 999px;
+  background: rgba(255,255,255,.92); backdrop-filter: blur(14px);
+  border: 2px solid var(--line); box-shadow: 0 5px 0 var(--line);
+}
+.lp-logo { display: flex; align-items: center; gap: .6rem; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 1.3rem; }
+.lp-logo-mark {
+  width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--orange);
+  display: grid; place-items: center; color: #fff; font-size: 1.15rem; box-shadow: 0 3px 0 var(--orange-deep);
+}
+.lp-nav-links { display: none; gap: 1.6rem; font-family: 'Fredoka', sans-serif; font-weight: 500; }
+.lp-nav-links a { color: var(--ink-soft); transition: color .15s, transform .15s; position: relative; padding: .2rem .1rem; }
+.lp-nav-links a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -.2rem; height: 4px; border-radius: 999px; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform .25s cubic-bezier(.3,1.4,.5,1); }
+.lp-nav-links a:hover, .lp-nav-links a.active { color: var(--orange); transform: translateY(-2px); }
+.lp-nav-links a:hover::after, .lp-nav-links a.active::after { transform: scaleX(1); }
+@media (min-width: 820px) { .lp-nav-links { display: flex; } }
 
-// Puntos del point_map para la letra "A" — coordenadas normalizadas 0-1
-// representan el trazo real de escritura: diagonal izq → ápice → diagonal der → barra
-const TRACE_A: Array<{ x: number; y: number }> = [
-  { x: 0.28, y: 0.88 }, { x: 0.32, y: 0.74 }, { x: 0.36, y: 0.60 },
-  { x: 0.40, y: 0.46 }, { x: 0.44, y: 0.32 }, { x: 0.50, y: 0.14 },
-  { x: 0.56, y: 0.32 }, { x: 0.60, y: 0.46 }, { x: 0.64, y: 0.60 },
-  { x: 0.68, y: 0.74 }, { x: 0.72, y: 0.88 },
-  { x: 0.37, y: 0.56 }, { x: 0.44, y: 0.56 }, { x: 0.50, y: 0.56 },
-  { x: 0.56, y: 0.56 }, { x: 0.63, y: 0.56 },
-];
+/* ── hero ── */
+.lp-hero { padding: 8.5rem 0 4rem; position: relative; }
+.lp-hero-grid { display: grid; gap: 3rem; align-items: center; }
+@media (min-width: 900px) { .lp-hero-grid { grid-template-columns: 1.1fr .9fr; } }
+.lp-hero h1 { font-size: clamp(2.6rem, 6.4vw, 4.6rem); line-height: 1.04; margin: 1.1rem 0 1.2rem; }
+.lp-cta-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+.lp-trust { display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; margin-top: 1.8rem; font-weight: 700; font-size: .95rem; color: var(--ink-soft); }
+.lp-trust span { display: inline-flex; align-items: center; gap: .4rem; }
+.lp-trust svg { color: var(--mint-deep); }
 
-function TraceCanvas({ width, height }: { width: number; height: number }) {
-  const [lit, setLit] = useState(0);
+/* stickers flotantes */
+.lp-float { position: absolute; display: grid; place-items: center; font-family: 'Fredoka', sans-serif; font-weight: 700; color: #fff; border-radius: 1.2rem; box-shadow: 0 6px 0 rgba(0,0,0,.14); animation: lp-bob 4.5s ease-in-out infinite; user-select: none; }
+@keyframes lp-bob { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-14px) rotate(calc(var(--r,0deg) + 5deg)); } }
+@keyframes lp-wiggle { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes lp-buzz { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-2px,1px); } 50% { transform: translate(2px,-1px); } 75% { transform: translate(-1px,-1px); } }
+@keyframes lp-ripple { from { transform: scale(.7); opacity: .65; } to { transform: scale(2.1); opacity: 0; } }
+@keyframes lp-draw { from { stroke-dashoffset: 400; } 60%,100% { stroke-dashoffset: 0; } }
+@keyframes lp-pop { 0% { transform: scale(.85); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
+/* hero visual */
+.lp-stage { position: relative; min-height: 460px; display: grid; place-items: center; }
+.lp-blob { position: absolute; inset: 6% 4%; background: var(--yellow); border-radius: 58% 42% 55% 45% / 50% 55% 45% 50%; box-shadow: 0 10px 0 var(--yellow-deep); }
+.lp-phone {
+  position: relative; width: 250px; padding: 12px; border-radius: 2.6rem; background: var(--ink);
+  box-shadow: 0 10px 0 #24173F; transform: rotate(-3deg); animation: lp-wiggle 6s ease-in-out infinite;
+}
+.lp-screen { background: #fff; border-radius: 2rem; padding: 1.1rem 1rem 1.3rem; text-align: center; overflow: hidden; }
+.lp-screen small { display: block; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: .78rem; color: var(--purple); letter-spacing: .04em; }
+.lp-canvas { position: relative; margin: .8rem auto 0; width: 190px; height: 190px; border-radius: 1.6rem; background: #F3ECFF; display: grid; place-items: center; }
+.lp-canvas svg { width: 150px; height: 150px; overflow: visible; }
+.lp-trace { stroke-dasharray: 400; animation: lp-draw 4s ease-in-out infinite; }
+.lp-ripple { position: absolute; width: 46px; height: 46px; border-radius: 50%; border: 3px solid var(--orange); animation: lp-ripple 2s ease-out infinite; }
+.lp-badge { display: inline-flex; align-items: center; gap: .4rem; margin-top: .9rem; padding: .4rem .8rem; border-radius: 999px; background: #E6FBF3; color: var(--mint-deep); font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: .82rem; }
+.lp-stars { margin-top: .7rem; display: flex; justify-content: center; gap: .3rem; color: var(--yellow); }
+
+/* mascota */
+.lp-mascot { position: absolute; left: -4%; bottom: 2%; width: 130px; animation: lp-bob 3.6s ease-in-out infinite; --r: -4deg; }
+.lp-bubble { position: absolute; right: -2%; top: 2%; background: #fff; border: 2px solid var(--line); box-shadow: 0 5px 0 var(--line); padding: .55rem .9rem; border-radius: 1.2rem 1.2rem 1.2rem .3rem; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: .95rem; animation: lp-bob 5s ease-in-out infinite; --r: 3deg; }
+
+/* ── cinta de letras ── */
+.lp-strip { background: var(--purple); color: #fff; padding: 1rem 0; overflow: hidden; transform: rotate(-1.2deg); margin: 1rem -2rem; box-shadow: 0 6px 0 var(--purple-deep); }
+.lp-strip-track { display: flex; gap: 2.4rem; width: max-content; animation: lp-marquee 28s linear infinite; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 1.7rem; white-space: nowrap; }
+@keyframes lp-marquee { to { transform: translateX(-50%); } }
+
+/* ── tarjetas ── */
+.lp-grid { display: grid; gap: 1.4rem; margin-top: 3rem; }
+@media (min-width: 640px) { .lp-grid--2 { grid-template-columns: repeat(2, 1fr); } .lp-grid--4 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 980px) { .lp-grid--4 { grid-template-columns: repeat(4, 1fr); } .lp-grid--3 { grid-template-columns: repeat(3, 1fr); } }
+.lp-card {
+  background: #fff; border: 2px solid var(--line); border-radius: 2rem; padding: 1.7rem;
+  box-shadow: 0 7px 0 var(--line); transition: transform .2s, box-shadow .2s;
+}
+.lp-card:hover { transform: translateY(-6px) rotate(-.6deg); box-shadow: 0 13px 0 var(--line); }
+.lp-icon { width: 3.6rem; height: 3.6rem; border-radius: 1.2rem; display: grid; place-items: center; color: #fff; margin-bottom: 1.1rem; }
+.lp-card h3 { font-size: 1.3rem; margin-bottom: .4rem; }
+.lp-card p { color: var(--ink-soft); line-height: 1.55; font-size: 1rem; }
+
+/* Padres: banda de color */
+.lp-parents { background: var(--sky); border-radius: 3rem; padding: 3.5rem 1.6rem; box-shadow: 0 10px 0 var(--sky-deep); position: relative; overflow: hidden; }
+@media (min-width: 720px) { .lp-parents { padding: 4rem 3.5rem; } }
+.lp-parents .lp-card { border-color: transparent; box-shadow: 0 7px 0 rgba(0,0,0,.12); }
+.lp-parents .lp-card:hover { box-shadow: 0 13px 0 rgba(0,0,0,.12); }
+
+/* pasos */
+.lp-steps { display: grid; gap: 2.2rem; margin-top: 3.4rem; }
+@media (min-width: 900px) { .lp-steps { grid-template-columns: repeat(3, 1fr); } }
+.lp-step { text-align: center; position: relative; }
+.lp-step-num { width: 5rem; height: 5rem; border-radius: 50%; margin: 0 auto 1.2rem; display: grid; place-items: center; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 2.2rem; color: #fff; box-shadow: 0 6px 0 rgba(0,0,0,.16); }
+.lp-step h3 { font-size: 1.4rem; margin-bottom: .5rem; }
+.lp-step p { color: var(--ink-soft); line-height: 1.6; max-width: 20rem; margin: 0 auto; }
+@media (min-width: 900px) { .lp-step:not(:last-child)::after { content: ''; position: absolute; top: 2.4rem; left: calc(50% + 3.4rem); width: calc(100% - 6.8rem); border-top: 4px dotted #C9B5FF; } }
+
+/* braille */
+.lp-braille { display: inline-grid; grid-template-columns: repeat(2, 1fr); gap: .35rem; padding: .7rem; background: #fff; border-radius: 1rem; box-shadow: 0 4px 0 var(--line); }
+.lp-braille i { width: .8rem; height: .8rem; border-radius: 50%; background: #E6DDF7; display: block; }
+.lp-braille i.on { background: var(--purple); }
+
+/* CTA final */
+.lp-cta { background: var(--orange); color: #fff; border-radius: 3rem; padding: 3.8rem 1.6rem; text-align: center; position: relative; overflow: hidden; box-shadow: 0 10px 0 var(--orange-deep); }
+.lp-cta h2 { color: #fff; font-size: clamp(2rem, 4.6vw, 3.2rem); line-height: 1.1; }
+.lp-cta p { color: rgba(255,255,255,.95); font-size: 1.15rem; line-height: 1.6; max-width: 34rem; margin: 1rem auto 2rem; }
+
+.lp-foot { padding: 2.6rem 0 3rem; text-align: center; color: var(--ink-soft); font-size: .92rem; }
+
+/* reveal */
+.lp-reveal { opacity: 0; transform: translateY(24px) scale(.98); transition: opacity .6s cubic-bezier(.2,.9,.3,1.2), transform .6s cubic-bezier(.2,.9,.3,1.2); }
+.lp-reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lp *, .lp *::before, .lp *::after { animation: none !important; transition: none !important; }
+  .lp-reveal { opacity: 1; transform: none; }
+}
+`;
+
+/* ─── utilidades ─── */
+
+function Reveal({ children, delay = 0, className = '' }: { children: ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [seen, setSeen] = useState(false);
   useEffect(() => {
-    setLit(0);
-    const interval = setInterval(() => {
-      setLit((prev) => {
-        if (prev >= TRACE_A.length - 1) { clearInterval(interval); return prev; }
-        return prev + 1;
-      });
-    }, 110);
-    return () => clearInterval(interval);
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setSeen(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setSeen(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
-
-  const finger = lit < TRACE_A.length ? TRACE_A[lit] : TRACE_A[TRACE_A.length - 1];
-
   return (
-    <div className="relative" style={{ width, height }}>
-      {TRACE_A.map((p, i) => (
-        <div key={i} className="absolute rounded-full"
-          style={{
-            width: 7, height: 7,
-            left: p.x * width - 3.5,
-            top: p.y * height - 3.5,
-            background: i <= lit ? ACCENT : 'rgba(255,255,255,0.12)',
-            transition: 'background 0.15s',
-          }}
-        />
-      ))}
-      <motion.div
-        animate={{ left: finger.x * width - 10, top: finger.y * height - 10 }}
-        transition={{ duration: 0.1, ease: 'linear' }}
-        className="absolute pointer-events-none"
-        style={{ width: 20, height: 20 }}
-      >
-        <div className="w-full h-full rounded-full"
-          style={{ background: 'rgba(255,107,53,0.25)', border: '1.5px solid rgba(255,107,53,0.8)' }} />
-      </motion.div>
+    <div ref={ref} className={`lp-reveal ${seen ? 'in' : ''} ${className}`} style={{ transitionDelay: `${delay}ms` }}>
+      {children}
     </div>
   );
 }
 
-function PhoneMockup() {
-  const [activeStep, setActiveStep] = useState(0);
-  const [traceKey, setTraceKey] = useState(0);
+/* Mascota "Hapti": una gotita sonriente con manitas */
+function Hapti({ size = 130 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 120 120" role="img" aria-label="Hapti, la mascota de HapticLearn">
+      <ellipse cx="60" cy="112" rx="30" ry="5" fill="rgba(59,42,92,.15)" />
+      <path d="M60 12c20 0 40 18 40 46 0 26-16 44-40 44S20 84 20 58C20 30 40 12 60 12z" fill="#FF6FA8" />
+      <path d="M60 12c20 0 40 18 40 46 0 26-16 44-40 44S20 84 20 58C20 30 40 12 60 12z" fill="none" stroke="#D94A85" strokeWidth="4" />
+      <ellipse cx="42" cy="34" rx="9" ry="5" fill="#fff" opacity=".45" transform="rotate(-30 42 34)" />
+      <circle cx="46" cy="58" r="9" fill="#fff" />
+      <circle cx="74" cy="58" r="9" fill="#fff" />
+      <circle cx="48" cy="60" r="4.5" fill="#3B2A5C" />
+      <circle cx="72" cy="60" r="4.5" fill="#3B2A5C" />
+      <circle cx="50" cy="58" r="1.6" fill="#fff" />
+      <circle cx="74" cy="58" r="1.6" fill="#fff" />
+      <path d="M46 78c4 8 24 8 28 0" fill="none" stroke="#3B2A5C" strokeWidth="4" strokeLinecap="round" />
+      <circle cx="36" cy="74" r="5" fill="#FFB3D1" />
+      <circle cx="84" cy="74" r="5" fill="#FFB3D1" />
+      <path d="M24 72c-8-2-12-10-8-16" fill="none" stroke="#D94A85" strokeWidth="6" strokeLinecap="round" />
+      <path d="M96 72c8-2 12-10 8-16" fill="none" stroke="#D94A85" strokeWidth="6" strokeLinecap="round" />
+    </svg>
+  );
+}
 
-  useEffect(() => {
-    const t = setInterval(() => {
-      setActiveStep((s) => (s + 1) % 3);
-      setTraceKey((k) => k + 1);
-    }, 2800);
-    return () => clearInterval(t);
-  }, []);
+function Braille({ dots }: { dots: number[] }) {
+  return (
+    <span className="lp-braille" aria-hidden="true">
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <i key={i} className={dots.includes(i) ? 'on' : ''} />
+      ))}
+    </span>
+  );
+}
+
+const STRIP = ['A', 'B', 'C', '1', '2', '3', 'M', 'O', '★', 'Ñ', '5', 'S', '7', 'L', '♥', 'E', '9', 'U'];
+
+const LEARN = [
+  { Icon: Vibrate, bg: '#FF6B35', title: 'Vibración que guía', desc: 'El celular vibra suavecito por el camino correcto de cada letra.' },
+  { Icon: Volume2, bg: '#2FD6A0', title: 'Una voz amiga', desc: 'Una voz celebra y dice cada letra mientras la dibuja.' },
+  { Icon: Type, bg: '#7C4DFF', title: 'Letras, números y braille', desc: 'Todo con trazos y vibraciones únicas para reconocerlos.' },
+  { Icon: Smartphone, bg: '#FF6FA8', title: 'Sin aparatos especiales', desc: 'Funciona en cualquier celular Android que ya tengan en casa.' },
+];
+
+const PARENTS = [
+  { Icon: Heart, bg: '#FF6FA8', title: 'Pensada con cariño', desc: 'Cada actividad es corta, tranquila y sin presión, para que aprender sea un juego.' },
+  { Icon: ShieldCheck, bg: '#2FD6A0', title: 'Un espacio seguro', desc: 'Sin anuncios ni chats con extraños. Solo su colegio, su educador y sus actividades.' },
+  { Icon: BarChart3, bg: '#FF6B35', title: 'Ves sus avances', desc: 'Su educador sigue su progreso para celebrar cada logro y apoyarle donde lo necesite.' },
+  { Icon: Sparkles, bg: '#7C4DFF', title: 'Aprende a su ritmo', desc: 'Sin apuros ni comparaciones. Cada paso pequeño cuenta y se celebra.' },
+];
+
+const SCHOOL = [
+  { Icon: Users, bg: '#4CC9F0', title: 'Salones ordenados', desc: 'La directora crea el salón y asigna educadoras en minutos.' },
+  { Icon: GraduationCap, bg: '#FFC93C', title: 'Cursos a medida', desc: 'Cada educadora crea el suyo para su aula.' },
+  { Icon: QrCode, bg: '#FF6FA8', title: 'Inscripción con QR', desc: 'Los alumnos se unen en segundos escaneando un código.' },
+];
+
+const STEPS = [
+  { color: '#4CC9F0', title: 'El colegio se organiza', desc: 'Una directora crea el salón y asigna a las educadoras. Todo queda listo en minutos desde el panel web.' },
+  { color: '#FF6B35', title: 'La educadora enseña', desc: 'Inscribe a los niños con su código QR, crea cursos con letras, números y braille, y los publica para el aula.' },
+  { color: '#2FD6A0', title: 'Tu peque aprende', desc: 'Traza letras con el dedo, siente la vibración en cada punto y escucha una voz que lo celebra. ¡Sin necesidad de ver la pantalla!' },
+];
+
+/* ─── página ─── */
+
+export function LandingPage() {
+  const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+  const [active, setActive] = useState('');
+
+  // Scroll suave hacia la sección + animación de "llegada" al aterrizar.
+  const goTo = (id: string) => (e: ReactMouseEvent) => {
+    e.preventDefault();
+    const sec = document.getElementById(id);
+    if (!sec) return;
+    setActive(id);
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const wrap = sec.querySelector<HTMLElement>('.lp-wrap');
+    if (!wrap) return;
+    window.setTimeout(() => {
+      wrap.classList.remove('lp-arrive');
+      void wrap.offsetWidth; // reinicia la animación si se pulsa dos veces
+      wrap.classList.add('lp-arrive');
+      window.setTimeout(() => wrap.classList.remove('lp-arrive'), 1100);
+    }, 450);
+  };
+
+  const copyLink = () => {
+    try {
+      void navigator.clipboard?.writeText(window.location.href);
+    } catch {
+      /* sin permiso de portapapeles: mostramos el aviso igual */
+    }
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2500);
+  };
 
   return (
-    <div className="relative select-none" style={{ width: 260, height: 520 }}>
-      <div className="relative w-full h-full rounded-[44px] overflow-hidden"
-        style={{
-          background: '#0C0520',
-          border: '1.5px solid rgba(255,255,255,0.12)',
-          boxShadow: '0 20px 60px -20px rgba(0,0,0,0.6)',
-        }}
-      >
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-7 rounded-b-2xl z-10"
-          style={{ background: '#0A0518' }} />
+    <div className="lp">
+      <style>{CSS}</style>
 
-        <div className="absolute inset-0 p-4 pt-10 flex flex-col">
-          <div className="flex justify-between items-center mb-3 px-1">
-            <div className="flex items-center gap-1.5">
-              <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: ACCENT }}>
-                <Hand size={12} color="white" />
-              </div>
-              <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 700, fontSize: 11, color: 'rgba(255,255,255,0.9)' }}>
-                HapticLearn
+      {/* NAV */}
+      <header className="lp-nav">
+        <a href="#top" className="lp-logo" aria-label="HapticLearn inicio">
+          <span className="lp-logo-mark" aria-hidden="true">✋</span>
+          HapticLearn
+        </a>
+        <nav className="lp-nav-links" aria-label="Secciones">
+          {[['familias', 'Para familias'], ['aprende', 'Qué vivirá tu peque'], ['como', 'Cómo funciona']].map(([id, label]) => (
+            <a key={id} href={`#${id}`} onClick={goTo(id)} className={active === id ? 'active' : ''}>{label}</a>
+          ))}
+        </nav>
+        <button className="lp-btn lp-btn--orange lp-btn--sm" onClick={() => navigate('/login')}>
+          Ingresar <ArrowRight size={16} />
+        </button>
+      </header>
+
+      <main id="top">
+        {/* HERO */}
+        <section className="lp-hero">
+          <div className="lp-wrap lp-hero-grid">
+            <div>
+              <span className="lp-pill" style={{ borderColor: '#FFD9C7', color: '#D9491A' }}>
+                <Sparkles size={15} /> Aprender jugando con el tacto
               </span>
+              <h1>
+                Escribir se siente <span className="lp-hl">mágico</span>
+              </h1>
+              <p className="lp-lead" style={{ maxWidth: '34rem' }}>
+                HapticLearn ayuda a niñas y niños con discapacidad visual a <strong style={{ color: 'var(--ink)' }}>trazar letras y números con el dedito</strong>,
+                guiados por vibraciones y una voz amiga. Pensada para colegios inclusivos del Perú.
+              </p>
+              <div className="lp-cta-row">
+                <button className="lp-btn lp-btn--orange" onClick={() => navigate('/login')}>
+                  Ingresar al panel <ArrowRight size={18} />
+                </button>
+                <button
+                  className="lp-btn lp-btn--white"
+                  onClick={goTo('familias')}
+                >
+                  <Heart size={18} color="#FF6FA8" fill="#FF6FA8" /> Soy papá o mamá
+                </button>
+              </div>
+              <div className="lp-trust">
+                <span><Check size={18} strokeWidth={3} /> Sin anuncios</span>
+                <span><Check size={18} strokeWidth={3} /> Compatible con TalkBack</span>
+                <span><Check size={18} strokeWidth={3} /> 40+ actividades</span>
+              </div>
             </div>
-            <div className="flex gap-1">
-              {[0, 1, 2].map(i => (
-                <div key={i} className="w-1.5 h-1.5 rounded-full transition-colors duration-300"
-                  style={{ background: i === activeStep ? ACCENT : 'rgba(255,255,255,0.18)' }} />
+
+            {/* visual */}
+            <div className="lp-stage" aria-hidden="true">
+              <div className="lp-blob" />
+
+              <div className="lp-float" style={{ top: '2%', left: '6%', width: 64, height: 64, background: '#4CC9F0', fontSize: '2rem', ['--r' as string]: '-10deg' }}>A</div>
+              <div className="lp-float" style={{ top: '12%', right: '2%', width: 58, height: 58, background: '#2FD6A0', fontSize: '1.9rem', animationDelay: '.8s', ['--r' as string]: '9deg' }}>1</div>
+              <div className="lp-float" style={{ bottom: '18%', right: '0%', width: 60, height: 60, background: '#7C4DFF', fontSize: '1.9rem', animationDelay: '1.4s', ['--r' as string]: '-6deg' }}>B</div>
+              <div className="lp-float" style={{ top: '46%', left: '-2%', width: 52, height: 52, background: '#FF6B35', fontSize: '1.7rem', animationDelay: '.4s', ['--r' as string]: '7deg' }}>3</div>
+
+              <div className="lp-phone">
+                <div className="lp-screen">
+                  <small>¡SIGUE EL TRAZO!</small>
+                  <div className="lp-canvas">
+                    <svg viewBox="0 0 100 100">
+                      <path d="M18 88 L50 14 L82 88 M30 62 H70" fill="none" stroke="#D9C9FF" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="1 14" />
+                      <path className="lp-trace" d="M18 88 L50 14 L82 88 M30 62 H70" fill="none" stroke="#FF6B35" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span className="lp-ripple" style={{ left: '30%', top: '18%' }} />
+                    <span className="lp-ripple" style={{ left: '30%', top: '18%', animationDelay: '.7s' }} />
+                  </div>
+                  <div className="lp-badge"><Vibrate size={14} /> ¡Vibra bien! Sigue así</div>
+                  <div className="lp-stars">
+                    {[0, 1, 2].map((i) => <Sparkles key={i} size={20} fill="#FFC93C" />)}
+                  </div>
+                </div>
+              </div>
+
+              <div className="lp-bubble">¡Tú puedes! 💪</div>
+              <div className="lp-mascot"><Hapti /></div>
+            </div>
+          </div>
+        </section>
+
+        {/* CINTA */}
+        <div aria-hidden="true">
+          <div className="lp-strip">
+            <div className="lp-strip-track">
+              {[...STRIP, ...STRIP].map((c, i) => <span key={i}>{c}</span>)}
+            </div>
+          </div>
+        </div>
+
+        {/* PARA FAMILIAS */}
+        <section id="familias" className="lp-sec">
+          <div className="lp-wrap">
+            <Reveal>
+              <div className="lp-parents">
+                <div style={{ textAlign: 'center', maxWidth: '42rem', margin: '0 auto' }}>
+                  <span className="lp-pill" style={{ borderColor: '#fff', color: 'var(--ink)' }}>
+                    <Heart size={15} color="#FF6FA8" fill="#FF6FA8" /> Para mamás y papás
+                  </span>
+                  <h2 className="lp-h2" style={{ color: '#fff', marginTop: '1rem' }}>
+                    Un lugar donde tu hijo o hija se siente capaz
+                  </h2>
+                  <p className="lp-lead" style={{ color: '#fff', marginTop: '1rem' }}>
+                    Sabemos lo importante que es. Por eso cada detalle de HapticLearn está hecho para que aprender sea seguro, divertido y lleno de logros.
+                  </p>
+                </div>
+                <div className="lp-grid lp-grid--4">
+                  {PARENTS.map(({ Icon, bg, title, desc }, i) => (
+                    <Reveal key={title} delay={i * 80}>
+                      <div className="lp-card" style={{ height: '100%' }}>
+                        <div className="lp-icon" style={{ background: bg }}><Icon size={26} /></div>
+                        <h3>{title}</h3>
+                        <p>{desc}</p>
+                      </div>
+                    </Reveal>
+                  ))}
+                </div>
+                <Reveal delay={200}>
+                  <div style={{ textAlign: 'center', marginTop: '2.4rem' }}>
+                    <p style={{ color: '#fff', fontWeight: 800, marginBottom: '1rem', fontSize: '1.05rem' }}>
+                      El panel es para los educadores. La app es para tu peque. ¿Tu colegio aún no la usa?
+                    </p>
+                    <button className="lp-btn lp-btn--white" onClick={copyLink}>
+                      {copied ? <Check size={18} color="#14A97B" strokeWidth={3} /> : <Link2 size={18} />}
+                      {copied ? '¡Enlace copiado!' : 'Compartir con el colegio'}
+                    </button>
+                  </div>
+                </Reveal>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* LO QUE VIVIRÁ */}
+        <section id="aprende" className="lp-sec" style={{ paddingTop: '1rem' }}>
+          <div className="lp-wrap">
+            <Reveal>
+              <div style={{ textAlign: 'center', maxWidth: '40rem', margin: '0 auto' }}>
+                <span className="lp-pill" style={{ borderColor: '#E1D5FF', color: '#5B32D6' }}>
+                  <Sparkles size={15} /> En la app
+                </span>
+                <h2 className="lp-h2" style={{ marginTop: '1rem' }}>
+                  Lo que <span className="lp-hl">vivirá</span> tu peque
+                </h2>
+                <div style={{ marginTop: '1.4rem', display: 'flex', justifyContent: 'center', gap: '.7rem' }} aria-hidden="true">
+                  <Braille dots={[0]} />
+                  <Braille dots={[0, 1]} />
+                  <Braille dots={[0, 3]} />
+                </div>
+              </div>
+            </Reveal>
+            <div className="lp-grid lp-grid--4">
+              {LEARN.map(({ Icon, bg, title, desc }, i) => (
+                <Reveal key={title} delay={i * 80}>
+                  <div className="lp-card" style={{ height: '100%' }}>
+                    <div className="lp-icon" style={{ background: bg }}><Icon size={26} /></div>
+                    <h3>{title}</h3>
+                    <p>{desc}</p>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
+        </section>
 
-          <div className="text-center mb-2">
-            <span className="px-3 py-1 rounded-full"
-              style={{ background: 'rgba(255,107,53,0.15)', color: '#FFA438', fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 10, fontWeight: 600 }}>
-              Lección · Letra A
-            </span>
-          </div>
-
-          <AnimatePresence mode="wait">
-            {activeStep === 0 && (
-              <motion.div key={`trace-${traceKey}`}
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="flex-1 flex flex-col items-center justify-center gap-3"
-              >
-                <div className="text-xs text-center"
-                  style={{ color: 'rgba(255,255,255,0.45)', fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: '0.07em', fontSize: 9 }}>
-                  SIGUE EL TRAZO CON TU DEDO
-                </div>
-                <div className="rounded-2xl overflow-hidden relative"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', width: 168, height: 168 }}>
-                  <TraceCanvas key={traceKey} width={168} height={168} />
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ zIndex: 0 }}>
-                    <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900, fontSize: '7rem', color: 'rgba(255,255,255,0.04)', lineHeight: 1, userSelect: 'none' }}>A</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <motion.div animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
-                    transition={{ repeat: Infinity, duration: 0.8 }}
-                    className="w-1.5 h-1.5 rounded-full" style={{ background: ACCENT }} />
-                  <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                    vibración háptica activa
-                  </span>
-                </div>
-              </motion.div>
-            )}
-
-            {activeStep === 1 && (
-              <motion.div key="voice"
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="flex-1 flex flex-col items-center justify-center gap-4"
-              >
-                <div className="w-28 h-28 rounded-2xl flex items-center justify-center"
-                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,107,53,0.2)' }}>
-                  <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900, fontSize: '4.5rem', color: ACCENT, lineHeight: 1 }}>A</span>
-                </div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  TalkBack anuncia:
-                </div>
-                <div className="px-3 py-1.5 rounded-xl"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                  <span style={{ fontSize: 11, fontStyle: 'italic', color: 'rgba(255,255,255,0.85)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                    "Letra A"
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  {[3, 5, 8, 10, 7, 4, 9, 6, 3].map((h, i) => (
-                    <motion.div key={i}
-                      animate={{ scaleY: [1, 1.6, 0.6, 1.4, 1] }}
-                      transition={{ repeat: Infinity, duration: 0.9, delay: i * 0.09 }}
-                      style={{ width: 3, height: h * 2, borderRadius: 2, background: ACCENT, transformOrigin: 'center' }}
-                    />
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {activeStep === 2 && (
-              <motion.div key="success"
-                initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.05 }}
-                transition={{ duration: 0.4 }}
-                className="flex-1 flex flex-col items-center justify-center gap-3"
-              >
-                <motion.div
-                  initial={{ scale: 0 }} animate={{ scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 260, damping: 18, delay: 0.1 }}
-                  className="w-16 h-16 rounded-full flex items-center justify-center"
-                  style={{ background: '#34D399' }}
-                >
-                  <CheckCircle size={32} color="white" strokeWidth={2.5} />
-                </motion.div>
-                <div style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 700, fontSize: 18, color: '#fff' }}>
-                  ¡Excelente!
-                </div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                  Trazo completado
-                </div>
-                <div className="w-full px-3 mt-2">
-                  <div className="flex justify-between mb-1.5">
-                    <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Progreso del curso</span>
-                    <span style={{ fontSize: 9, color: ACCENT, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>7/27</span>
-                  </div>
-                  <div className="w-full h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
-                    <motion.div initial={{ width: '22%' }} animate={{ width: '26%' }}
-                      transition={{ duration: 0.9, delay: 0.3 }}
-                      className="h-full rounded-full"
-                      style={{ background: ACCENT }}
-                    />
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <div className="flex justify-around py-3 mt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-            {[Hand, BarChart3, School].map((Icon, i) => (
-              <div key={i} className="flex flex-col items-center gap-1">
-                <Icon size={14} color={i === 0 ? ACCENT : 'rgba(255,255,255,0.3)'} />
-                <div className="w-1 h-1 rounded-full" style={{ background: i === 0 ? ACCENT : 'transparent' }} />
+        {/* CÓMO FUNCIONA */}
+        <section id="como" className="lp-sec" style={{ paddingTop: '1rem' }}>
+          <div className="lp-wrap">
+            <Reveal>
+              <div style={{ textAlign: 'center' }}>
+                <span className="lp-pill" style={{ borderColor: '#C9F3E4', color: '#14A97B' }}>
+                  <Check size={15} strokeWidth={3} /> Muy fácil
+                </span>
+                <h2 className="lp-h2" style={{ marginTop: '1rem' }}>
+                  Tres pasos y <span className="lp-hl">a jugar</span>
+                </h2>
               </div>
-            ))}
+            </Reveal>
+            <div className="lp-steps">
+              {STEPS.map(({ color, title, desc }, i) => (
+                <Reveal key={title} delay={i * 120}>
+                  <div className="lp-step">
+                    <div className="lp-step-num" style={{ background: color }}>{i + 1}</div>
+                    <h3>{title}</h3>
+                    <p>{desc}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+
+            <div className="lp-grid lp-grid--3" style={{ marginTop: '3.8rem' }}>
+              {SCHOOL.map(({ Icon, bg, title, desc }, i) => (
+                <Reveal key={title} delay={i * 80}>
+                  <div className="lp-card" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', height: '100%' }}>
+                    <div className="lp-icon" style={{ background: bg, flexShrink: 0, marginBottom: 0 }}><Icon size={26} /></div>
+                    <div>
+                      <h3 style={{ fontSize: '1.15rem' }}>{title}</h3>
+                      <p style={{ fontSize: '.95rem' }}>{desc}</p>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
+        </section>
+
+        {/* CTA */}
+        <section className="lp-sec" style={{ paddingTop: '1rem' }}>
+          <div className="lp-wrap">
+            <Reveal>
+              <div className="lp-cta">
+                <div className="lp-float" aria-hidden="true" style={{ top: '10%', left: '5%', width: 54, height: 54, background: '#FFC93C', color: '#3B2A5C', fontSize: '1.7rem', ['--r' as string]: '-8deg' }}>A</div>
+                <div className="lp-float" aria-hidden="true" style={{ bottom: '12%', right: '6%', width: 54, height: 54, background: '#4CC9F0', fontSize: '1.7rem', animationDelay: '1s', ['--r' as string]: '8deg' }}>2</div>
+                <div style={{ position: 'relative' }}>
+                  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '.6rem' }}><Hapti size={110} /></div>
+                  <h2>¿Eres educador o director de colegio?</h2>
+                  <p>Ingresa al panel, registra tu institución y empieza hoy a enseñar con vibración háptica y TalkBack.</p>
+                  <button className="lp-btn lp-btn--white" onClick={() => navigate('/login')}>
+                    Ingresar al panel <ArrowRight size={18} />
+                  </button>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      </main>
+
+      <footer className="lp-foot">
+        <div className="lp-wrap">
+          <div className="lp-logo" style={{ justifyContent: 'center', marginBottom: '.6rem', color: 'var(--ink)' }}>
+            <span className="lp-logo-mark" aria-hidden="true">✋</span> HapticLearn
+          </div>
+          <p>App Educativa Accesible · Universidad Peruana de Ciencias Aplicadas (UPC) · 2026</p>
+          <p style={{ marginTop: '.3rem', fontSize: '.82rem', opacity: 0.8 }}>Hecha con ♥ para que todos los niños puedan aprender</p>
         </div>
-      </div>
+      </footer>
     </div>
-  );
-}
-
-/* ─── Main Component ─── */
-export function LandingPage() {
-  const navigate = useNavigate();
-
-  return (
-    <>
-      <style>{`
-        @keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }
-        .float { animation: float 6s ease-in-out infinite; }
-      `}</style>
-
-      <div
-        style={{
-          minHeight: '100vh',
-          background: `radial-gradient(60rem 44rem at 50% -8%, rgba(255,107,53,0.09), transparent 62%), #140A26`,
-          backgroundAttachment: 'fixed',
-          color: '#fff',
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-          overflowX: 'hidden',
-        }}
-      >
-        {/* ── NAV ── */}
-        <motion.header
-          initial={{ opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="fixed top-4 inset-x-0 z-50 mx-auto flex w-[calc(100%_-_3rem)] max-w-6xl items-center justify-between px-5 py-3 rounded-2xl"
-          style={{
-            background: 'rgba(20,10,38,0.75)',
-            backdropFilter: 'blur(24px)',
-            border: '1px solid rgba(255,255,255,0.08)',
-          }}
-        >
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: ACCENT }}>
-              <Hand size={15} color="white" />
-            </div>
-            <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 800, fontSize: '1rem', letterSpacing: '-0.01em' }}>
-              HapticLearn
-            </span>
-          </div>
-
-          <nav className="hidden md:flex items-center gap-6">
-            {[['#features', 'Plataforma'], ['#audiences', 'Para quién'], ['#how', 'Cómo funciona']].map(([href, label]) => (
-              <a key={href} href={href}
-                className="transition-colors duration-150 hover:text-white"
-                style={{ fontSize: '0.82rem', fontWeight: 500, color: 'rgba(255,255,255,0.62)', textDecoration: 'none' }}
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-
-          <HoverButton variant="primary" onClick={() => navigate('/login')} className="flex items-center gap-2 px-4 py-2 text-sm">
-            Ingresar
-            <ArrowRight size={14} />
-          </HoverButton>
-        </motion.header>
-
-        {/* ── HERO — columna única, centrada y simétrica ── */}
-        <section className="relative flex flex-col items-center justify-center px-6" style={{ minHeight: '100dvh' }}>
-          <motion.div initial="hidden" animate="visible" variants={stagger} className="relative z-10 w-full max-w-2xl mx-auto text-center">
-            <motion.h1 variants={rise}
-              style={{
-                fontFamily: "'Outfit', sans-serif",
-                fontWeight: 900,
-                fontSize: 'clamp(2.8rem, 7vw, 4.6rem)',
-                lineHeight: 1.06,
-                letterSpacing: '-0.035em',
-                marginBottom: '1.5rem',
-              }}
-            >
-              Para niños que aprenden <span style={{ color: ACCENT }}>con el tacto</span>.
-            </motion.h1>
-
-            <motion.p variants={rise}
-              className="mx-auto mb-10 max-w-lg"
-              style={{ fontSize: '1.08rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.68)', fontWeight: 400 }}
-            >
-              HapticLearn enseña a niños con discapacidad visual a{' '}
-              <strong style={{ color: 'rgba(255,255,255,0.92)', fontWeight: 600 }}>trazar letras y números con el dedo</strong>,
-              guiados por vibración y voz en cada trazo. Diseñado para colegios inclusivos del Perú.
-            </motion.p>
-
-            <motion.div variants={rise} className="flex flex-wrap items-center justify-center gap-3 mb-12">
-              <HoverButton variant="primary" onClick={() => navigate('/login')} className="flex items-center gap-2.5 px-6 py-3.5 text-sm">
-                Ingresar al panel
-                <ArrowRight size={16} />
-              </HoverButton>
-              <HoverButton variant="secondary" onClick={() => document.getElementById('how')?.scrollIntoView({ behavior: 'smooth' })}
-                className="flex items-center gap-2 px-6 py-3.5 text-sm">
-                <Play size={14} />
-                Ver cómo funciona
-              </HoverButton>
-            </motion.div>
-
-            <motion.div variants={rise} className="flex flex-col items-center gap-5">
-              <div className="flex items-center gap-4">
-                <div className="flex -space-x-2">
-                  {['#FF6B35', '#FF8F5E', '#FFA438', '#FFD166'].map((c, i) => (
-                    <div key={i} className="w-8 h-8 rounded-full flex items-center justify-center border-2"
-                      style={{ background: c, borderColor: '#140A26', fontSize: 10, fontWeight: 700, color: i === 3 ? '#3A2400' : '#fff' }}>
-                      {['A', 'EP', 'E', 'E'][i]}
-                    </div>
-                  ))}
-                </div>
-                <div className="text-left">
-                  <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255,255,255,0.85)' }}>
-                    Admin · Ed. Principal · Educador · Estudiante
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)' }}>
-                    4 roles, un solo ecosistema
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3" style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)' }}>
-                <span>40+ actividades</span>
-                <span aria-hidden style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,0.25)' }} />
-                <span>12 patrones hápticos</span>
-                <span aria-hidden style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,0.25)' }} />
-                <span>100% TalkBack</span>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          <motion.button
-            onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
-            aria-label="Ver más"
-            style={{ background: 'none', border: 'none' }}
-          >
-            <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}>
-              <ChevronDown size={18} style={{ color: 'rgba(255,255,255,0.3)' }} />
-            </motion.div>
-          </motion.button>
-        </section>
-
-        {/* ── DEMO — el producto en acción, su propio respiro fuera del hero ── */}
-        <section id="demo" className="relative flex flex-col items-center px-6 pt-8 pb-24">
-          <div
-            className="absolute rounded-full pointer-events-none"
-            style={{ width: 380, height: 380, background: ACCENT, opacity: 0.07, filter: 'blur(70px)' }}
-          />
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-            className="relative float"
-          >
-            <PhoneMockup />
-          </motion.div>
-        </section>
-
-        {/* ── FEATURES ── */}
-        <PlatformFeatures />
-
-        {/* ── PARA QUIÉN ── */}
-        <section id="audiences" className="py-24 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
-          <div className="max-w-5xl mx-auto">
-            <Section>
-              <motion.div variants={reveal} className="text-center max-w-xl mx-auto mb-16">
-                <h2 style={{
-                  fontFamily: "'Outfit', sans-serif", fontWeight: 900,
-                  fontSize: 'clamp(1.7rem, 3vw, 2.4rem)', letterSpacing: '-0.03em', lineHeight: 1.2,
-                }}>
-                  Si tu hijo o hija tiene discapacidad visual, esto es para tu familia.
-                </h2>
-                <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, marginTop: 12 }}>
-                  Pídele a su colegio que adopte HapticLearn. El panel es para los educadores — la app es para tu hijo o hija.
-                </p>
-              </motion.div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Padres y madres */}
-                <motion.div variants={reveal} className="p-7 rounded-2xl" style={SURFACE}>
-                  <div className="flex items-start gap-4 mb-7">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: ACCENT }}>
-                      <Heart size={20} color="white" />
-                    </div>
-                    <div>
-                      <h3 style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 800, fontSize: '1.15rem', marginBottom: 3 }}>
-                        Para padres y madres
-                      </h3>
-                      <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)' }}>
-                        Lo que vivirá tu hijo o hija en la app
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-x-5 gap-y-6">
-                    {[
-                      { Icon: Vibrate, title: 'Vibración guiada', desc: 'La pantalla vibra en el camino correcto de cada letra' },
-                      { Icon: Volume2, title: 'Voz en cada trazo', desc: 'Anuncia cada letra mientras la traza' },
-                      { Icon: Type, title: 'Letras, números y braille', desc: 'Cada uno con trazo y vibración única' },
-                      { Icon: Smartphone, title: 'Sin hardware especial', desc: 'Funciona en cualquier celular Android' },
-                    ].map(({ Icon, title, desc }, i) => (
-                      <div key={i} className="flex items-start gap-2.5">
-                        <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5" style={{ background: 'rgba(255,107,53,0.16)' }}>
-                          <Icon size={13} style={{ color: ACCENT }} strokeWidth={1.8} />
-                        </div>
-                        <div>
-                          <p style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: '0.8rem', color: '#fff', marginBottom: 3 }}>{title}</p>
-                          <p style={{ fontSize: '0.75rem', lineHeight: 1.55, color: 'rgba(255,255,255,0.58)' }}>{desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-
-                {/* Colegios */}
-                <motion.div variants={reveal} className="p-7 rounded-2xl" style={SURFACE}>
-                  <div className="flex items-start gap-4 mb-7">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: ACCENT }}>
-                      <School size={20} color="white" />
-                    </div>
-                    <div>
-                      <h3 style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 800, fontSize: '1.15rem', marginBottom: 3 }}>
-                        Para colegios
-                      </h3>
-                      <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)' }}>
-                        Gestión educativa inclusiva desde el primer día
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-x-5 gap-y-6">
-                    {[
-                      { Icon: Users, title: 'Gestión de salones', desc: 'El educador principal asigna educadores' },
-                      { Icon: GraduationCap, title: 'Cursos personalizados', desc: 'Cada educador crea el suyo para su aula' },
-                      { Icon: QrCode, title: 'Inscripción por QR', desc: 'Alumnos inscritos en segundos' },
-                      { Icon: BarChart3, title: 'Estadísticas completas', desc: 'Por salón, curso y alumno' },
-                    ].map(({ Icon, title, desc }, i) => (
-                      <div key={i} className="flex items-start gap-2.5">
-                        <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5" style={{ background: 'rgba(255,107,53,0.16)' }}>
-                          <Icon size={13} style={{ color: ACCENT }} strokeWidth={1.8} />
-                        </div>
-                        <div>
-                          <p style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: '0.8rem', color: '#fff', marginBottom: 3 }}>{title}</p>
-                          <p style={{ fontSize: '0.75rem', lineHeight: 1.55, color: 'rgba(255,255,255,0.58)' }}>{desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              </div>
-
-              <motion.div variants={reveal}
-                className="mt-6 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4"
-                style={SURFACE}
-              >
-                <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.72)', lineHeight: 1.5 }}>
-                  ¿Tu colegio aún no usa HapticLearn? Comparte el enlace, sea con la dirección o con otras familias.
-                </p>
-                <HoverButton
-                  variant="secondary"
-                  onClick={() => {
-                    const url = window.location.href;
-                    if (navigator.clipboard) navigator.clipboard.writeText(url);
-                    alert('¡Enlace copiado! Compártelo con tu colegio o con otras familias.');
-                  }}
-                  className="flex items-center gap-2 px-4 py-2.5 text-xs shrink-0"
-                  style={{ color: '#FFA438' } as React.CSSProperties}
-                >
-                  <ArrowRight size={13} />
-                  Copiar enlace para compartir
-                </HoverButton>
-              </motion.div>
-            </Section>
-          </div>
-        </section>
-
-        {/* ── CÓMO FUNCIONA — flujo conectado, no tarjetas repetidas ── */}
-        <section id="how" className="py-24 px-6">
-          <div className="max-w-6xl mx-auto">
-            <Section>
-              <motion.div variants={reveal} className="text-center mb-16">
-                <h2 style={{
-                  fontFamily: "'Outfit', sans-serif", fontWeight: 900,
-                  fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', letterSpacing: '-0.03em',
-                }}>
-                  Tres pasos. Aula inclusiva.
-                </h2>
-              </motion.div>
-
-              <div className="max-w-xl mx-auto">
-                {[
-                  {
-                    title: 'El colegio se organiza',
-                    desc: 'Un educador principal crea el salón y asigna educadores. Todo queda configurado en minutos desde el panel web.',
-                  },
-                  {
-                    title: 'El educador enseña',
-                    desc: 'Inscribe estudiantes con su código QR, crea cursos con trazos de letras, números y braille, y los publica para el aula.',
-                  },
-                  {
-                    title: 'El niño aprende',
-                    desc: 'Traza letras con el dedo, siente la vibración en cada punto del trazo y escucha la voz que confirma. Sin ver la pantalla.',
-                  },
-                ].map((s, i, arr) => (
-                  <motion.div key={i} variants={reveal} className="relative pl-14" style={{ paddingBottom: i === arr.length - 1 ? 0 : 40 }}>
-                    {i < arr.length - 1 && (
-                      <div className="absolute top-9 bottom-0 w-px" style={{ left: 15, background: 'rgba(255,255,255,0.1)' }} />
-                    )}
-                    <div
-                      className="absolute top-0 left-0 w-8 h-8 rounded-full flex items-center justify-center"
-                      style={{ background: 'rgba(255,107,53,0.14)', border: '1px solid rgba(255,107,53,0.35)' }}
-                    >
-                      <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 800, fontSize: '0.78rem', color: ACCENT }}>{i + 1}</span>
-                    </div>
-                    <h3 style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 700, fontSize: '1.05rem', marginBottom: 8, color: '#fff', paddingTop: 3 }}>{s.title}</h3>
-                    <p style={{ fontSize: '0.86rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.65)' }}>{s.desc}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </Section>
-          </div>
-        </section>
-
-        {/* ── CTA — centrado y simétrico ── */}
-        <section className="py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-          <div className="max-w-2xl mx-auto px-6 text-center">
-            <Section>
-              <motion.h2 variants={reveal}
-                className="mb-6"
-                style={{
-                  fontFamily: "'Outfit', sans-serif", fontWeight: 900,
-                  fontSize: 'clamp(1.9rem, 4vw, 2.8rem)', letterSpacing: '-0.035em',
-                  lineHeight: 1.15, color: '#fff',
-                }}
-              >
-                ¿Eres educador o director de colegio?
-              </motion.h2>
-
-              <motion.p variants={reveal}
-                className="mb-9"
-                style={{ fontSize: '1rem', lineHeight: 1.75, color: 'rgba(255,255,255,0.65)' }}
-              >
-                Ingresa al panel, registra tu institución y empieza a enseñar a tus alumnos con
-                vibración háptica y TalkBack — hoy mismo.
-              </motion.p>
-
-              <motion.div variants={reveal} className="flex flex-wrap items-center justify-center gap-3">
-                <HoverButton variant="primary" onClick={() => navigate('/login')} className="flex items-center gap-2.5 px-8 py-3.5">
-                  Ingresar al panel
-                  <ArrowRight size={16} />
-                </HoverButton>
-                <HoverButton
-                  variant="secondary"
-                  onClick={() => {
-                    const url = window.location.href;
-                    if (navigator.clipboard) navigator.clipboard.writeText(url);
-                    alert('¡Enlace copiado! Compártelo con el director de tu colegio.');
-                  }}
-                  className="flex items-center gap-2 px-6 py-3.5 text-sm"
-                >
-                  Soy padre o madre — compartir con el colegio
-                </HoverButton>
-              </motion.div>
-            </Section>
-          </div>
-        </section>
-
-        {/* ── FOOTER ── */}
-        <footer className="py-10 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: '#0D0620' }}>
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: ACCENT }}>
-                <Hand size={13} color="white" />
-              </div>
-              <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 800, fontSize: '0.9rem' }}>HapticLearn</span>
-            </div>
-            <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textAlign: 'center' }}>
-              App Educativa Accesible · Universidad Peruana de Ciencias Aplicadas (UPC) · 2026
-            </p>
-            <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.3)' }}>
-              React Native · NestJS · Supabase
-            </p>
-          </div>
-        </footer>
-      </div>
-    </>
   );
 }

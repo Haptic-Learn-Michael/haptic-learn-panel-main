@@ -10,7 +10,7 @@ import { getClassrooms } from '../api/classrooms.api';
 import { getPatterns } from '../api/haptic-patterns.api';
 import { getSchools } from '../api/schools.api';
 import { getClassroomSummary, type ClassroomSummary } from '../api/progress.api';
-import type { Classroom } from '../types';
+import type { Classroom, User, HapticPattern } from '../types';
 
 // ── Greeting helpers ──────────────────────────────────────────────────────────
 
@@ -168,11 +168,54 @@ const roleColorShort: Record<string, string> = {
   educator: 'bg-white/10 text-white/70',
   student: 'bg-white/[0.07] text-white/50',
 };
+const roleBarColor: Record<string, string> = {
+  student: '#FF6B35', educator: '#EDC157', lead_educator: '#34D399', admin: 'rgba(255,255,255,0.35)',
+};
+const roleOrder = ['student', 'educator', 'lead_educator', 'admin'];
+
+const ACTIVITY_DAYS = 14;
+
+const buildActivity = (users: User[]) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const buckets = Array.from({ length: ACTIVITY_DAYS }, (_, i) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() - (ACTIVITY_DAYS - 1 - i));
+    return { date: d, count: 0 };
+  });
+  users.forEach((u) => {
+    const c = new Date(u.created_at);
+    c.setHours(0, 0, 0, 0);
+    const idx = Math.round((c.getTime() - buckets[0].date.getTime()) / 86400000);
+    if (idx >= 0 && idx < ACTIVITY_DAYS) buckets[idx].count++;
+  });
+  return buckets;
+};
+
+const fmtDay = (d: Date) => d.toLocaleDateString('es', { day: 'numeric', month: 'short' });
+
+const Num = ({ children, color = '#fff' }: { children: React.ReactNode; color?: string }) => (
+  <span className="font-bold tabular-nums" style={{ color }}>{children}</span>
+);
+
+const Panel = ({ title, aside, children, className = '' }: {
+  title: string; aside?: React.ReactNode; children: React.ReactNode; className?: string;
+}) => (
+  <section className={`surface border border-white/[0.08] rounded-2xl p-6 ${className}`}>
+    <div className="flex items-center justify-between mb-5">
+      <h2 className="text-sm font-semibold text-white">{title}</h2>
+      {aside}
+    </div>
+    {children}
+  </section>
+);
 
 const AdminDashboard = ({ userName }: { userName: string }) => {
   const [stats, setStats] = useState({ users: 0, classrooms: 0, patterns: 0, schools: 0 });
   const [roleCounts, setRoleCounts] = useState<Record<string, number>>({});
-  const [recentUsers, setRecentUsers] = useState<import('../types').User[]>([]);
+  const [categoryCounts, setCategoryCounts] = useState<[string, number][]>([]);
+  const [activity, setActivity] = useState<ReturnType<typeof buildActivity>>([]);
+  const [recentUsers, setRecentUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -180,85 +223,153 @@ const AdminDashboard = ({ userName }: { userName: string }) => {
       .then(([u, c, p, s]) => {
         setStats({ users: u.data.length, classrooms: c.data.length, patterns: p.data.length, schools: s.data.length });
 
-        const counts: Record<string, number> = {};
-        u.data.forEach((usr) => { counts[usr.role] = (counts[usr.role] ?? 0) + 1; });
-        setRoleCounts(counts);
+        const roles: Record<string, number> = {};
+        u.data.forEach((usr) => { roles[usr.role] = (roles[usr.role] ?? 0) + 1; });
+        setRoleCounts(roles);
 
-        const sorted = [...u.data].sort(
-          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        const cats: Record<string, number> = {};
+        p.data.forEach((pat: HapticPattern) => { cats[pat.category] = (cats[pat.category] ?? 0) + 1; });
+        setCategoryCounts(Object.entries(cats).sort((a, b) => b[1] - a[1]));
+
+        setActivity(buildActivity(u.data));
+        setRecentUsers(
+          [...u.data]
+            .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+            .slice(0, 5),
         );
-        setRecentUsers(sorted.slice(0, 5));
       })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
-  const greeting = getGreeting();
-  const usersSub = !loading && stats.users > 0
-    ? `${roleCounts.student ?? 0} estudiantes · ${(roleCounts.educator ?? 0) + (roleCounts.lead_educator ?? 0)} educadoras`
-    : undefined;
+  const maxDay = Math.max(1, ...activity.map((a) => a.count));
+  const weekTotal = activity.slice(-7).reduce((s, a) => s + a.count, 0);
+  const fortnightTotal = activity.reduce((s, a) => s + a.count, 0);
+  const maxCat = Math.max(1, ...categoryCounts.map(([, n]) => n));
 
   return (
     <>
       <div className="mb-8">
-        <p className="text-xs font-semibold text-[#FF6B35] uppercase tracking-wide mb-1.5">{greeting}</p>
+        <p className="text-xs font-semibold text-[#FF6B35] uppercase tracking-wide mb-1.5">{getGreeting()}</p>
         <h1 className="page-title text-3xl">{firstName(userName)}</h1>
-        <p className="text-white/45 mt-1.5 text-sm">
-          Esto es lo que pasa hoy en <span className="font-semibold text-white/70">HapticLearn</span>.
-        </p>
-      </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard label="Usuarios registrados" value={stats.users} sub={usersSub} icon={Users}
-          iconBg="bg-[#EDC157]/15" iconColor="text-[#EDC157]" loading={loading} />
-        <StatCard label="Colegios" value={stats.schools} icon={Building2}
-          iconBg="bg-emerald-500/15" iconColor="text-emerald-400" loading={loading} />
-        <StatCard label="Salones" value={stats.classrooms} icon={School}
-          iconBg="bg-[#FF6B35]/15" iconColor="text-[#FF6B35]" loading={loading} />
-        <StatCard label="Patrones hápticos" value={stats.patterns} icon={Zap}
-          iconBg="bg-white/[0.07]" iconColor="text-white/55" loading={loading} />
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-[1.1fr_1fr] gap-6">
-        {/* Accesos rápidos */}
-        <div className="surface border border-white/[0.08] rounded-2xl p-6">
-          <h2 className="text-sm font-semibold text-white mb-4">Accesos rápidos</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {[
-              { to: '/classrooms', label: 'Salones', sub: 'Gestionar salones', Icon: School, hover: 'hover:border-[#FF6B35]/40 hover:bg-[#FF6B35]/5', iconBg: 'bg-[#FF6B35]/15', iconColor: 'text-[#FF6B35]', arrow: 'group-hover:text-[#FF6B35]' },
-              { to: '/users', label: 'Usuarios', sub: 'Gestionar usuarios', Icon: Users, hover: 'hover:border-[#EDC157]/40 hover:bg-[#EDC157]/5', iconBg: 'bg-[#EDC157]/15', iconColor: 'text-[#EDC157]', arrow: 'group-hover:text-[#EDC157]' },
-              { to: '/schools', label: 'Colegios', sub: 'Gestionar colegios', Icon: Building2, hover: 'hover:border-emerald-400/40 hover:bg-emerald-500/5', iconBg: 'bg-emerald-500/15', iconColor: 'text-emerald-400', arrow: 'group-hover:text-emerald-400' },
-              { to: '/haptic-patterns', label: 'Patrones hápticos', sub: 'Ver catálogo', Icon: Zap, hover: 'hover:border-white/25 hover:bg-white/5', iconBg: 'bg-white/10', iconColor: 'text-white/70', arrow: 'group-hover:text-white/60' },
-            ].map(({ to, label, sub, Icon, hover, iconBg, iconColor, arrow }) => (
-              <Link
-                key={to}
-                to={to}
-                className={`group flex items-center justify-between p-4 rounded-xl border border-white/[0.08] transition-all duration-150 ${hover}`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${iconBg}`}>
-                    <Icon size={18} className={iconColor} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-white">{label}</p>
-                    <p className="text-xs text-white/40">{sub}</p>
-                  </div>
-                </div>
-                <ArrowRight size={16} className={`text-white/20 transition-colors ${arrow}`} />
-              </Link>
-            ))}
+        {loading ? (
+          <div className="mt-5 space-y-2.5 animate-pulse max-w-2xl">
+            <div className="h-6 w-full bg-white/[0.06] rounded" />
+            <div className="h-6 w-2/3 bg-white/[0.06] rounded" />
           </div>
-        </div>
+        ) : (
+          <p className="mt-4 max-w-3xl text-xl md:text-2xl leading-snug font-medium text-white/45">
+            <Num>{stats.users}</Num> usuarios repartidos en{' '}
+            <Num color="#34D399">{stats.schools}</Num> colegios y{' '}
+            <Num color="#FF6B35">{stats.classrooms}</Num> salones, con{' '}
+            <Num color="#EDC157">{stats.patterns}</Num> patrones hápticos en el catálogo.
+          </p>
+        )}
 
-        {/* Usuarios recientes */}
-        <div className="surface border border-white/[0.08] rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-white">Usuarios recientes</h2>
+        <div className="mt-5 flex flex-wrap gap-2">
+          {[
+            { to: '/classrooms', label: 'Salones', Icon: School },
+            { to: '/users', label: 'Usuarios', Icon: Users },
+            { to: '/schools', label: 'Colegios', Icon: Building2 },
+            { to: '/haptic-patterns', label: 'Patrones hápticos', Icon: Zap },
+          ].map(({ to, label, Icon }) => (
+            <Link
+              key={to}
+              to={to}
+              className="group inline-flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full border border-white/[0.1] text-sm text-white/65 hover:text-white hover:border-[#FF6B35]/50 hover:bg-[#FF6B35]/[0.06] transition-colors duration-150"
+            >
+              <Icon size={14} className="text-white/40 group-hover:text-[#FF6B35] transition-colors" />
+              {label}
+              <ArrowRight size={12} className="text-white/20 group-hover:text-[#FF6B35] transition-colors" />
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-[1.5fr_1fr] gap-6 mb-6">
+        <Panel
+          title="Registros · últimos 14 días"
+          aside={!loading && <span className="text-xs text-white/40"><Num color="#FF6B35">{weekTotal}</Num> esta semana · {fortnightTotal} en total</span>}
+        >
+          {loading ? (
+            <div className="h-36 bg-white/[0.04] rounded-xl animate-pulse" />
+          ) : fortnightTotal === 0 ? (
+            <p className="h-36 flex items-center justify-center text-sm text-white/30">
+              Sin registros nuevos en los últimos 14 días.
+            </p>
+          ) : (
+            <>
+              <div className="flex items-end gap-1.5 h-36" role="img"
+                aria-label={`Registros por día en los últimos ${ACTIVITY_DAYS} días, ${fortnightTotal} en total`}>
+                {activity.map((a, i) => {
+                  const isToday = i === activity.length - 1;
+                  return (
+                    <div key={i} className="flex-1 h-full flex items-end group relative"
+                      title={`${fmtDay(a.date)}: ${a.count}`}>
+                      <div
+                        className="w-full rounded-t-md transition-all duration-200 group-hover:brightness-125"
+                        style={{
+                          height: a.count === 0 ? 3 : `${Math.max(8, (a.count / maxDay) * 100)}%`,
+                          background: a.count === 0 ? 'rgba(255,255,255,0.07)' : isToday ? '#FF6B35' : 'rgba(255,107,53,0.45)',
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex justify-between mt-2 text-[11px] text-white/35">
+                <span>{fmtDay(activity[0].date)}</span>
+                <span>Hoy</span>
+              </div>
+            </>
+          )}
+        </Panel>
+
+        <Panel title="Quién usa HapticLearn">
+          {loading ? (
+            <div className="space-y-4 animate-pulse">
+              <div className="h-3 bg-white/[0.06] rounded-full" />
+              <div className="h-24 bg-white/[0.04] rounded-xl" />
+            </div>
+          ) : stats.users === 0 ? (
+            <p className="text-sm text-white/30 py-6 text-center">Aún no hay usuarios.</p>
+          ) : (
+            <>
+              <div className="flex h-3 rounded-full overflow-hidden gap-0.5 mb-5" role="img"
+                aria-label="Distribución de usuarios por rol">
+                {roleOrder.filter((r) => roleCounts[r]).map((r) => (
+                  <div key={r} style={{ flex: roleCounts[r], background: roleBarColor[r] }} />
+                ))}
+              </div>
+              <ul className="space-y-2.5">
+                {roleOrder.filter((r) => roleCounts[r]).map((r) => (
+                  <li key={r} className="flex items-center justify-between text-sm">
+                    <span className="flex items-center gap-2.5 text-white/70">
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: roleBarColor[r] }} />
+                      {roleLabelShort[r]}
+                    </span>
+                    <span className="text-white/45 tabular-nums">
+                      <span className="text-white font-semibold">{roleCounts[r]}</span>
+                      {' · '}{Math.round((roleCounts[r] / stats.users) * 100)}%
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </Panel>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-[1.5fr_1fr] gap-6">
+        <Panel
+          title="Usuarios recientes"
+          aside={
             <Link to="/users" className="flex items-center gap-1 text-xs text-[#FF6B35] hover:text-[#FF6B35]/80 transition-colors">
               Ver todos <ArrowRight size={11} />
             </Link>
-          </div>
-
+          }
+        >
           {loading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
@@ -293,7 +404,38 @@ const AdminDashboard = ({ userName }: { userName: string }) => {
               ))}
             </div>
           )}
-        </div>
+        </Panel>
+
+        <Panel
+          title="Patrones por categoría"
+          aside={
+            <Link to="/haptic-patterns" className="flex items-center gap-1 text-xs text-[#FF6B35] hover:text-[#FF6B35]/80 transition-colors">
+              Catálogo <ArrowRight size={11} />
+            </Link>
+          }
+        >
+          {loading ? (
+            <div className="space-y-3 animate-pulse">
+              {[1, 2, 3].map((i) => <div key={i} className="h-4 bg-white/[0.05] rounded" />)}
+            </div>
+          ) : categoryCounts.length === 0 ? (
+            <p className="text-sm text-white/30 py-6 text-center">Sin patrones en el catálogo.</p>
+          ) : (
+            <ul className="space-y-3.5">
+              {categoryCounts.map(([cat, n]) => (
+                <li key={cat}>
+                  <div className="flex items-center justify-between text-xs mb-1.5">
+                    <span className="text-white/70 capitalize">{cat}</span>
+                    <span className="text-white font-semibold tabular-nums">{n}</span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
+                    <div className="h-full rounded-full bg-[#EDC157]" style={{ width: `${(n / maxCat) * 100}%` }} />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
       </div>
     </>
   );
