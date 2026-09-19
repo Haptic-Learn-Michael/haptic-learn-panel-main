@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { login } from '../api/auth.api';
@@ -181,6 +181,12 @@ export const LoginPage = () => {
               >
                 {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
               </button>
+            </div>
+
+            <div className="text-right">
+              <Link to="/forgot-password" className="text-xs font-bold text-[#7C4DFF] hover:underline">
+                ¿Olvidaste tu contraseña?
+              </Link>
             </div>
 
             <button type="submit" disabled={loading} className="btn-primary w-full h-12 text-base mt-2">
