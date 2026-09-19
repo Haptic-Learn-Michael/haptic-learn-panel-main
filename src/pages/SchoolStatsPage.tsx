@@ -31,12 +31,12 @@ const getLevel = (pct: number) =>
 
 const levelColors: Record<string, string> = {
   Inicial: 'bg-white/[0.08] text-white/45',
-  'En progreso': 'bg-[#FFD166]/15 text-[#FFD166]',
+  'En progreso': 'bg-[#EDC157]/15 text-[#EDC157]',
   Avanzado: 'bg-emerald-500/15 text-emerald-400',
 };
 
 const barColor = (pct: number) =>
-  pct <= 30 ? 'bg-white/25' : pct <= 79 ? 'bg-[#FFD166]' : 'bg-emerald-400';
+  pct <= 30 ? 'bg-white/25' : pct <= 79 ? 'bg-[#EDC157]' : 'bg-emerald-400';
 
 const computeStats = (classroom: Classroom, summary: ClassroomSummary): ClassroomStats => {
   const { courses, students, items, progress } = summary;
@@ -89,7 +89,7 @@ const contentTypeMeta: Record<string, { label: string; color: string }> = {
   letter:     { label: 'Letra',    color: 'bg-blue-500/15 text-blue-400' },
   number:     { label: 'Número',   color: 'bg-violet-500/15 text-violet-400' },
   braille:    { label: 'Braille',  color: 'bg-[#FF6B35]/15 text-[#FF6B35]' },
-  quiz_mc:    { label: 'Quiz',     color: 'bg-[#FFD166]/15 text-[#FFD166]' },
+  quiz_mc:    { label: 'Quiz',     color: 'bg-[#EDC157]/15 text-[#EDC157]' },
   quiz_voice: { label: 'Quiz Voz', color: 'bg-emerald-500/15 text-emerald-400' },
 };
 
@@ -127,7 +127,7 @@ const ProgressBar = ({ pct, thin }: { pct: number; thin?: boolean }) => (
 
 const statusMeta = {
   completed:   { Icon: CheckCircle2, color: 'text-emerald-400',  label: 'Completada' },
-  in_progress: { Icon: Clock,        color: 'text-[#FFD166]',    label: 'En curso' },
+  in_progress: { Icon: Clock,        color: 'text-[#EDC157]',    label: 'En curso' },
   not_started: { Icon: Circle,       color: 'text-white/20',     label: 'Sin comenzar' },
 };
 
@@ -162,7 +162,7 @@ const ActivityRow = ({
       )}
       <span className={`text-[10px] px-1.5 py-0.5 rounded-full flex-shrink-0 ${
         status === 'completed' ? 'bg-emerald-500/10 text-emerald-400'
-        : status === 'in_progress' ? 'bg-[#FFD166]/10 text-[#FFD166]'
+        : status === 'in_progress' ? 'bg-[#EDC157]/10 text-[#EDC157]'
         : 'bg-white/[0.05] text-white/25'
       }`}>
         {label}
@@ -364,7 +364,7 @@ export const SchoolStatsPage = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard label="Educadoras activas" value={activeEducators}
           sub={educators.length > activeEducators ? `de ${educators.length} total` : undefined}
-          icon={Users} iconBg="bg-[#FFD166]/15" iconColor="text-[#FFD166]" loading={loading} />
+          icon={Users} iconBg="bg-[#EDC157]/15" iconColor="text-[#EDC157]" loading={loading} />
         <StatCard label="Salones" value={classroomStats.length}
           icon={School} iconBg="bg-[#FF6B35]/15" iconColor="text-[#FF6B35]" loading={loading} />
         <StatCard label="Estudiantes" value={totalStudents}
@@ -372,8 +372,8 @@ export const SchoolStatsPage = () => {
           icon={Users} iconBg="bg-white/[0.07]" iconColor="text-white/55" loading={loading} />
         <StatCard label="Progreso general" value={`${overallProgress}%`}
           sub={getLevel(overallProgress)} icon={TrendingUp}
-          iconBg={overallProgress <= 30 ? 'bg-white/[0.07]' : overallProgress <= 79 ? 'bg-[#FFD166]/15' : 'bg-emerald-500/15'}
-          iconColor={overallProgress <= 30 ? 'text-white/45' : overallProgress <= 79 ? 'text-[#FFD166]' : 'text-emerald-400'}
+          iconBg={overallProgress <= 30 ? 'bg-white/[0.07]' : overallProgress <= 79 ? 'bg-[#EDC157]/15' : 'bg-emerald-500/15'}
+          iconColor={overallProgress <= 30 ? 'text-white/45' : overallProgress <= 79 ? 'text-[#EDC157]' : 'text-emerald-400'}
           loading={loading} />
       </div>
 
@@ -442,8 +442,8 @@ export const SchoolStatsPage = () => {
                         <div key={course.id} className={`px-5 py-4 ${idx < c.courses.length - 1 ? 'border-b border-white/[0.04]' : ''}`}>
                           {/* Course header */}
                           <div className="flex items-start gap-3 mb-3">
-                            <div className="w-7 h-7 bg-[#FFD166]/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <BookOpen size={13} className="text-[#FFD166]" />
+                            <div className="w-7 h-7 bg-[#EDC157]/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <BookOpen size={13} className="text-[#EDC157]" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 flex-wrap">

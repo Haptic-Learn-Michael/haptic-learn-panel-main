@@ -8,7 +8,7 @@ const CATEGORIES = ['braille', 'learning', 'feedback', 'navigation', 'system'];
 
 const categoryColors: Record<string, string> = {
   braille: 'bg-[#FF6B35]/20 text-[#FF6B35]',
-  learning: 'bg-[#FFD166]/20 text-[#FFD166]',
+  learning: 'bg-[#EDC157]/20 text-[#EDC157]',
   feedback: 'bg-emerald-500/20 text-emerald-400',
   navigation: 'bg-blue-500/20 text-blue-400',
   system: 'bg-white/10 text-white/55',
@@ -114,7 +114,7 @@ const PatternModal = ({
                 required
               >
                 {CATEGORIES.map((c) => (
-                  <option key={c} value={c} className="bg-[#2C0B50] text-white">{c}</option>
+                  <option key={c} value={c} className="bg-[#282A2B] text-white">{c}</option>
                 ))}
               </select>
             </ModalField>

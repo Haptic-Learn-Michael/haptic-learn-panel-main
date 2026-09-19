@@ -25,7 +25,10 @@ import {
 const ACCENT = '#FF6B35';
 const SURFACE = { background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.07)' };
 
-/* ─── animation variants ─── */
+/* ─── animation variants ───
+   El hero lleva el único momento de entrada elaborado (blur + stagger).
+   El resto de secciones usa un fade simple para no repetir el mismo efecto
+   vistoso en cada scroll. */
 const stagger = {
   visible: { transition: { staggerChildren: 0.09 } },
   hidden: {},
@@ -33,6 +36,10 @@ const stagger = {
 const rise = {
   hidden: { opacity: 0, y: 24, filter: 'blur(4px)' },
   visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
+};
+const reveal = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
 };
 
 function Section({ children, className = '' }: { children: React.ReactNode; className?: string }) {
@@ -42,14 +49,6 @@ function Section({ children, className = '' }: { children: React.ReactNode; clas
     <motion.div ref={ref} initial="hidden" animate={inView ? 'visible' : 'hidden'} variants={stagger} className={className}>
       {children}
     </motion.div>
-  );
-}
-
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: ACCENT, fontFamily: "'Outfit', sans-serif", letterSpacing: '0.1em' }}>
-      {children}
-    </p>
   );
 }
 
@@ -165,7 +164,7 @@ function PhoneMockup() {
                 className="flex-1 flex flex-col items-center justify-center gap-3"
               >
                 <div className="text-xs text-center"
-                  style={{ color: 'rgba(255,255,255,0.4)', fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: '0.07em', fontSize: 9 }}>
+                  style={{ color: 'rgba(255,255,255,0.45)', fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: '0.07em', fontSize: 9 }}>
                   SIGUE EL TRAZO CON TU DEDO
                 </div>
                 <div className="rounded-2xl overflow-hidden relative"
@@ -179,7 +178,7 @@ function PhoneMockup() {
                   <motion.div animate={{ scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
                     transition={{ repeat: Infinity, duration: 0.8 }}
                     className="w-1.5 h-1.5 rounded-full" style={{ background: ACCENT }} />
-                  <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                     vibración háptica activa
                   </span>
                 </div>
@@ -196,12 +195,12 @@ function PhoneMockup() {
                   style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,107,53,0.2)' }}>
                   <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900, fontSize: '4.5rem', color: ACCENT, lineHeight: 1 }}>A</span>
                 </div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                   TalkBack anuncia:
                 </div>
                 <div className="px-3 py-1.5 rounded-xl"
                   style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                  <span style={{ fontSize: 11, fontStyle: 'italic', color: 'rgba(255,255,255,0.75)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  <span style={{ fontSize: 11, fontStyle: 'italic', color: 'rgba(255,255,255,0.85)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                     "Letra A"
                   </span>
                 </div>
@@ -234,12 +233,12 @@ function PhoneMockup() {
                 <div style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 700, fontSize: 18, color: '#fff' }}>
                   ¡Excelente!
                 </div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                   Trazo completado
                 </div>
                 <div className="w-full px-3 mt-2">
                   <div className="flex justify-between mb-1.5">
-                    <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Progreso del curso</span>
+                    <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Progreso del curso</span>
                     <span style={{ fontSize: 9, color: ACCENT, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>7/27</span>
                   </div>
                   <div className="w-full h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
@@ -257,7 +256,7 @@ function PhoneMockup() {
           <div className="flex justify-around py-3 mt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
             {[Hand, BarChart3, School].map((Icon, i) => (
               <div key={i} className="flex flex-col items-center gap-1">
-                <Icon size={14} color={i === 0 ? ACCENT : 'rgba(255,255,255,0.25)'} />
+                <Icon size={14} color={i === 0 ? ACCENT : 'rgba(255,255,255,0.3)'} />
                 <div className="w-1 h-1 rounded-full" style={{ background: i === 0 ? ACCENT : 'transparent' }} />
               </div>
             ))}
@@ -314,7 +313,7 @@ export function LandingPage() {
             {[['#features', 'Plataforma'], ['#audiences', 'Para quién'], ['#how', 'Cómo funciona']].map(([href, label]) => (
               <a key={href} href={href}
                 className="transition-colors duration-150 hover:text-white"
-                style={{ fontSize: '0.82rem', fontWeight: 500, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}
+                style={{ fontSize: '0.82rem', fontWeight: 500, color: 'rgba(255,255,255,0.62)', textDecoration: 'none' }}
               >
                 {label}
               </a>
@@ -328,31 +327,31 @@ export function LandingPage() {
         </motion.header>
 
         {/* ── HERO — columna única, centrada y simétrica ── */}
-        <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-32 pb-16">
+        <section className="relative flex flex-col items-center justify-center px-6" style={{ minHeight: '100dvh' }}>
           <motion.div initial="hidden" animate="visible" variants={stagger} className="relative z-10 w-full max-w-2xl mx-auto text-center">
             <motion.h1 variants={rise}
               style={{
                 fontFamily: "'Outfit', sans-serif",
                 fontWeight: 900,
-                fontSize: 'clamp(2.6rem, 6vw, 4rem)',
-                lineHeight: 1.08,
+                fontSize: 'clamp(2.8rem, 7vw, 4.6rem)',
+                lineHeight: 1.06,
                 letterSpacing: '-0.035em',
-                marginBottom: '1.25rem',
+                marginBottom: '1.5rem',
               }}
             >
-              Para niños que <span style={{ color: ACCENT }}>aprenden</span> diferente.
+              Para niños que aprenden <span style={{ color: ACCENT }}>con el tacto</span>.
             </motion.h1>
 
             <motion.p variants={rise}
-              className="mx-auto mb-9 max-w-lg"
-              style={{ fontSize: '1rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.55)', fontWeight: 400 }}
+              className="mx-auto mb-10 max-w-lg"
+              style={{ fontSize: '1.08rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.68)', fontWeight: 400 }}
             >
               HapticLearn enseña a niños con discapacidad visual a{' '}
-              <strong style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 600 }}>trazar letras y números con el dedo</strong>,
+              <strong style={{ color: 'rgba(255,255,255,0.92)', fontWeight: 600 }}>trazar letras y números con el dedo</strong>,
               guiados por vibración y voz en cada trazo. Diseñado para colegios inclusivos del Perú.
             </motion.p>
 
-            <motion.div variants={rise} className="flex flex-wrap items-center justify-center gap-3 mb-10">
+            <motion.div variants={rise} className="flex flex-wrap items-center justify-center gap-3 mb-12">
               <HoverButton variant="primary" onClick={() => navigate('/login')} className="flex items-center gap-2.5 px-6 py-3.5 text-sm">
                 Ingresar al panel
                 <ArrowRight size={16} />
@@ -364,105 +363,89 @@ export function LandingPage() {
               </HoverButton>
             </motion.div>
 
-            <motion.div variants={rise} className="flex items-center justify-center gap-4">
-              <div className="flex -space-x-2">
-                {['#FF6B35', '#FF8F5E', '#FFA438', '#FFD166'].map((c, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full flex items-center justify-center border-2"
-                    style={{ background: c, borderColor: '#140A26', fontSize: 10, fontWeight: 700, color: i === 3 ? '#3A2400' : '#fff' }}>
-                    {['A', 'EP', 'E', 'E'][i]}
+            <motion.div variants={rise} className="flex flex-col items-center gap-5">
+              <div className="flex items-center gap-4">
+                <div className="flex -space-x-2">
+                  {['#FF6B35', '#FF8F5E', '#FFA438', '#FFD166'].map((c, i) => (
+                    <div key={i} className="w-8 h-8 rounded-full flex items-center justify-center border-2"
+                      style={{ background: c, borderColor: '#140A26', fontSize: 10, fontWeight: 700, color: i === 3 ? '#3A2400' : '#fff' }}>
+                      {['A', 'EP', 'E', 'E'][i]}
+                    </div>
+                  ))}
+                </div>
+                <div className="text-left">
+                  <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255,255,255,0.85)' }}>
+                    Admin · Ed. Principal · Educador · Estudiante
                   </div>
-                ))}
+                  <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)' }}>
+                    4 roles, un solo ecosistema
+                  </div>
+                </div>
               </div>
-              <div className="text-left">
-                <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255,255,255,0.8)' }}>
-                  Admin · Ed. Principal · Educador · Estudiante
-                </div>
-                <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)' }}>
-                  4 roles, un solo ecosistema
-                </div>
+
+              <div className="flex items-center gap-3" style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)' }}>
+                <span>40+ actividades</span>
+                <span aria-hidden style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,0.25)' }} />
+                <span>12 patrones hápticos</span>
+                <span aria-hidden style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,0.25)' }} />
+                <span>100% TalkBack</span>
               </div>
             </motion.div>
           </motion.div>
 
-          {/* Phone mockup — visual único, sin anillos que compitan con el copy */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-            className="relative flex justify-center items-center mt-14 float"
-          >
-            <div
-              className="absolute rounded-full pointer-events-none"
-              style={{ width: 340, height: 340, background: ACCENT, opacity: 0.08, filter: 'blur(60px)' }}
-            />
-            <PhoneMockup />
-          </motion.div>
-
-          <motion.div
+          <motion.button
+            onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
-            className="mt-14 flex flex-col items-center gap-2"
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
+            aria-label="Ver más"
+            style={{ background: 'none', border: 'none' }}
           >
             <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}>
-              <ChevronDown size={18} style={{ color: 'rgba(255,255,255,0.2)' }} />
+              <ChevronDown size={18} style={{ color: 'rgba(255,255,255,0.3)' }} />
             </motion.div>
-          </motion.div>
+          </motion.button>
         </section>
 
-        {/* ── STATS BAR ── */}
-        <div className="max-w-6xl mx-auto px-6 py-14">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {[
-              { val: '40+', label: 'Actividades educativas', sub: 'letras, números y braille', Icon: Type },
-              { val: '12', label: 'Patrones hápticos', sub: 'únicos por contenido', Icon: Vibrate },
-              { val: '4', label: 'Roles de usuario', sub: 'admin · educador · alumno', Icon: Users },
-            ].map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="text-center py-8 px-4 rounded-2xl"
-                style={SURFACE}
-              >
-                <div className="mx-auto mb-3 w-10 h-10 rounded-xl flex items-center justify-center"
-                  style={{ background: 'rgba(255,107,53,0.14)', border: '1px solid rgba(255,107,53,0.25)' }}>
-                  <s.Icon size={17} style={{ color: ACCENT }} strokeWidth={2} />
-                </div>
-                <div style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900, fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#fff', lineHeight: 1, marginBottom: 6 }}>
-                  {s.val}
-                </div>
-                <div style={{ fontWeight: 600, fontSize: '0.85rem', color: 'rgba(255,255,255,0.8)', marginBottom: 2 }}>{s.label}</div>
-                <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.3)' }}>{s.sub}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+        {/* ── DEMO — el producto en acción, su propio respiro fuera del hero ── */}
+        <section id="demo" className="relative flex flex-col items-center px-6 pt-8 pb-24">
+          <div
+            className="absolute rounded-full pointer-events-none"
+            style={{ width: 380, height: 380, background: ACCENT, opacity: 0.07, filter: 'blur(70px)' }}
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+            className="relative float"
+          >
+            <PhoneMockup />
+          </motion.div>
+        </section>
 
         {/* ── FEATURES ── */}
         <PlatformFeatures />
 
         {/* ── PARA QUIÉN ── */}
         <section id="audiences" className="py-24 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <Section>
-              <motion.div variants={rise} className="flex flex-col items-center gap-3 text-center max-w-xl mx-auto mb-16">
-                <Eyebrow>Para quién es</Eyebrow>
+              <motion.div variants={reveal} className="text-center max-w-xl mx-auto mb-16">
                 <h2 style={{
                   fontFamily: "'Outfit', sans-serif", fontWeight: 900,
                   fontSize: 'clamp(1.7rem, 3vw, 2.4rem)', letterSpacing: '-0.03em', lineHeight: 1.2,
                 }}>
                   Si tu hijo o hija tiene discapacidad visual, esto es para tu familia.
                 </h2>
-                <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.48)', lineHeight: 1.7 }}>
+                <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, marginTop: 12 }}>
                   Pídele a su colegio que adopte HapticLearn. El panel es para los educadores — la app es para tu hijo o hija.
                 </p>
               </motion.div>
 
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Padres y madres */}
-                <motion.div variants={rise} className="p-7 rounded-2xl" style={SURFACE}>
-                  <div className="flex items-start gap-4 mb-6">
+                <motion.div variants={reveal} className="p-7 rounded-2xl" style={SURFACE}>
+                  <div className="flex items-start gap-4 mb-7">
                     <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: ACCENT }}>
                       <Heart size={20} color="white" />
                     </div>
@@ -470,26 +453,26 @@ export function LandingPage() {
                       <h3 style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 800, fontSize: '1.15rem', marginBottom: 3 }}>
                         Para padres y madres
                       </h3>
-                      <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>
+                      <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)' }}>
                         Lo que vivirá tu hijo o hija en la app
                       </p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2.5">
+                  <div className="grid grid-cols-2 gap-x-5 gap-y-6">
                     {[
                       { Icon: Vibrate, title: 'Vibración guiada', desc: 'La pantalla vibra en el camino correcto de cada letra' },
                       { Icon: Volume2, title: 'Voz en cada trazo', desc: 'Anuncia cada letra mientras la traza' },
                       { Icon: Type, title: 'Letras, números y braille', desc: 'Cada uno con trazo y vibración única' },
                       { Icon: Smartphone, title: 'Sin hardware especial', desc: 'Funciona en cualquier celular Android' },
                     ].map(({ Icon, title, desc }, i) => (
-                      <div key={i} className="p-3.5 rounded-xl flex flex-col gap-2" style={{ background: 'rgba(255,255,255,0.035)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                        <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'rgba(255,107,53,0.16)' }}>
+                      <div key={i} className="flex items-start gap-2.5">
+                        <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5" style={{ background: 'rgba(255,107,53,0.16)' }}>
                           <Icon size={13} style={{ color: ACCENT }} strokeWidth={1.8} />
                         </div>
                         <div>
-                          <p style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: '0.78rem', color: '#fff', marginBottom: 2 }}>{title}</p>
-                          <p style={{ fontSize: '0.72rem', lineHeight: 1.5, color: 'rgba(255,255,255,0.45)' }}>{desc}</p>
+                          <p style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: '0.8rem', color: '#fff', marginBottom: 3 }}>{title}</p>
+                          <p style={{ fontSize: '0.75rem', lineHeight: 1.55, color: 'rgba(255,255,255,0.58)' }}>{desc}</p>
                         </div>
                       </div>
                     ))}
@@ -497,8 +480,8 @@ export function LandingPage() {
                 </motion.div>
 
                 {/* Colegios */}
-                <motion.div variants={rise} className="p-7 rounded-2xl" style={SURFACE}>
-                  <div className="flex items-start gap-4 mb-6">
+                <motion.div variants={reveal} className="p-7 rounded-2xl" style={SURFACE}>
+                  <div className="flex items-start gap-4 mb-7">
                     <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: ACCENT }}>
                       <School size={20} color="white" />
                     </div>
@@ -506,26 +489,26 @@ export function LandingPage() {
                       <h3 style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 800, fontSize: '1.15rem', marginBottom: 3 }}>
                         Para colegios
                       </h3>
-                      <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>
+                      <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)' }}>
                         Gestión educativa inclusiva desde el primer día
                       </p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2.5">
+                  <div className="grid grid-cols-2 gap-x-5 gap-y-6">
                     {[
                       { Icon: Users, title: 'Gestión de salones', desc: 'El educador principal asigna educadores' },
                       { Icon: GraduationCap, title: 'Cursos personalizados', desc: 'Cada educador crea el suyo para su aula' },
                       { Icon: QrCode, title: 'Inscripción por QR', desc: 'Alumnos inscritos en segundos' },
                       { Icon: BarChart3, title: 'Estadísticas completas', desc: 'Por salón, curso y alumno' },
                     ].map(({ Icon, title, desc }, i) => (
-                      <div key={i} className="p-3.5 rounded-xl flex flex-col gap-2" style={{ background: 'rgba(255,255,255,0.035)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                        <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'rgba(255,107,53,0.16)' }}>
+                      <div key={i} className="flex items-start gap-2.5">
+                        <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5" style={{ background: 'rgba(255,107,53,0.16)' }}>
                           <Icon size={13} style={{ color: ACCENT }} strokeWidth={1.8} />
                         </div>
                         <div>
-                          <p style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: '0.78rem', color: '#fff', marginBottom: 2 }}>{title}</p>
-                          <p style={{ fontSize: '0.72rem', lineHeight: 1.5, color: 'rgba(255,255,255,0.45)' }}>{desc}</p>
+                          <p style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: '0.8rem', color: '#fff', marginBottom: 3 }}>{title}</p>
+                          <p style={{ fontSize: '0.75rem', lineHeight: 1.55, color: 'rgba(255,255,255,0.58)' }}>{desc}</p>
                         </div>
                       </div>
                     ))}
@@ -533,11 +516,11 @@ export function LandingPage() {
                 </motion.div>
               </div>
 
-              <motion.div variants={rise}
+              <motion.div variants={reveal}
                 className="mt-6 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4"
                 style={SURFACE}
               >
-                <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.72)', lineHeight: 1.5 }}>
                   ¿Tu colegio aún no usa HapticLearn? Comparte el enlace, sea con la dirección o con otras familias.
                 </p>
                 <HoverButton
@@ -558,13 +541,12 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* ── CÓMO FUNCIONA ── */}
+        {/* ── CÓMO FUNCIONA — flujo conectado, no tarjetas repetidas ── */}
         <section id="how" className="py-24 px-6">
           <div className="max-w-6xl mx-auto">
             <Section>
-              <motion.div variants={rise} className="text-center mb-16">
-                <Eyebrow>Flujo educativo</Eyebrow>
-                <h2 className="mt-3" style={{
+              <motion.div variants={reveal} className="text-center mb-16">
+                <h2 style={{
                   fontFamily: "'Outfit', sans-serif", fontWeight: 900,
                   fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', letterSpacing: '-0.03em',
                 }}>
@@ -572,33 +554,33 @@ export function LandingPage() {
                 </h2>
               </motion.div>
 
-              <div className="grid md:grid-cols-3 gap-6 relative">
+              <div className="max-w-xl mx-auto">
                 {[
                   {
-                    n: '01',
                     title: 'El colegio se organiza',
                     desc: 'Un educador principal crea el salón y asigna educadores. Todo queda configurado en minutos desde el panel web.',
                   },
                   {
-                    n: '02',
                     title: 'El educador enseña',
                     desc: 'Inscribe estudiantes con su código QR, crea cursos con trazos de letras, números y braille, y los publica para el aula.',
                   },
                   {
-                    n: '03',
                     title: 'El niño aprende',
                     desc: 'Traza letras con el dedo, siente la vibración en cada punto del trazo y escucha la voz que confirma. Sin ver la pantalla.',
                   },
-                ].map((s, i) => (
-                  <motion.div key={i} variants={rise} className="rounded-2xl p-7" style={SURFACE}>
+                ].map((s, i, arr) => (
+                  <motion.div key={i} variants={reveal} className="relative pl-14" style={{ paddingBottom: i === arr.length - 1 ? 0 : 40 }}>
+                    {i < arr.length - 1 && (
+                      <div className="absolute top-9 bottom-0 w-px" style={{ left: 15, background: 'rgba(255,255,255,0.1)' }} />
+                    )}
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
-                      style={{ background: 'rgba(255,107,53,0.14)', border: '1px solid rgba(255,107,53,0.25)' }}
+                      className="absolute top-0 left-0 w-8 h-8 rounded-full flex items-center justify-center"
+                      style={{ background: 'rgba(255,107,53,0.14)', border: '1px solid rgba(255,107,53,0.35)' }}
                     >
-                      <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900, fontSize: '1rem', color: ACCENT }}>{s.n}</span>
+                      <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 800, fontSize: '0.78rem', color: ACCENT }}>{i + 1}</span>
                     </div>
-                    <h3 style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 700, fontSize: '1rem', marginBottom: 10, color: '#fff' }}>{s.title}</h3>
-                    <p style={{ fontSize: '0.82rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.48)' }}>{s.desc}</p>
+                    <h3 style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 700, fontSize: '1.05rem', marginBottom: 8, color: '#fff', paddingTop: 3 }}>{s.title}</h3>
+                    <p style={{ fontSize: '0.86rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.65)' }}>{s.desc}</p>
                   </motion.div>
                 ))}
               </div>
@@ -610,11 +592,8 @@ export function LandingPage() {
         <section className="py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div className="max-w-2xl mx-auto px-6 text-center">
             <Section>
-              <motion.div variants={rise}>
-                <Eyebrow>Únete ahora</Eyebrow>
-              </motion.div>
-              <motion.h2 variants={rise}
-                className="mt-3 mb-6"
+              <motion.h2 variants={reveal}
+                className="mb-6"
                 style={{
                   fontFamily: "'Outfit', sans-serif", fontWeight: 900,
                   fontSize: 'clamp(1.9rem, 4vw, 2.8rem)', letterSpacing: '-0.035em',
@@ -624,15 +603,15 @@ export function LandingPage() {
                 ¿Eres educador o director de colegio?
               </motion.h2>
 
-              <motion.p variants={rise}
+              <motion.p variants={reveal}
                 className="mb-9"
-                style={{ fontSize: '1rem', lineHeight: 1.75, color: 'rgba(255,255,255,0.48)' }}
+                style={{ fontSize: '1rem', lineHeight: 1.75, color: 'rgba(255,255,255,0.65)' }}
               >
                 Ingresa al panel, registra tu institución y empieza a enseñar a tus alumnos con
                 vibración háptica y TalkBack — hoy mismo.
               </motion.p>
 
-              <motion.div variants={rise} className="flex flex-wrap items-center justify-center gap-3">
+              <motion.div variants={reveal} className="flex flex-wrap items-center justify-center gap-3">
                 <HoverButton variant="primary" onClick={() => navigate('/login')} className="flex items-center gap-2.5 px-8 py-3.5">
                   Ingresar al panel
                   <ArrowRight size={16} />
@@ -653,13 +632,6 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* ── TOGGLE PROTOTIPO ── */}
-        <div className="fixed bottom-6 right-6 z-[100]">
-          <HoverButton variant="secondary" onClick={() => navigate('/v2')} className="flex items-center gap-2 px-4 py-2.5 text-xs">
-            Ver Prototipo 2 →
-          </HoverButton>
-        </div>
-
         {/* ── FOOTER ── */}
         <footer className="py-10 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: '#0D0620' }}>
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
@@ -669,10 +641,10 @@ export function LandingPage() {
               </div>
               <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 800, fontSize: '0.9rem' }}>HapticLearn</span>
             </div>
-            <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.22)', textAlign: 'center' }}>
+            <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textAlign: 'center' }}>
               App Educativa Accesible · Universidad Peruana de Ciencias Aplicadas (UPC) · 2026
             </p>
-            <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.15)' }}>
+            <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.3)' }}>
               React Native · NestJS · Supabase
             </p>
           </div>

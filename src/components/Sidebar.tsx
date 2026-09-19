@@ -48,7 +48,7 @@ const navItems = [
 
 const roleBadge: Record<string, string> = {
   admin: 'bg-[#FF6B35]/20 text-[#FF6B35]',
-  lead_educator: 'bg-[#FFD166]/20 text-[#FFD166]',
+  lead_educator: 'bg-[#EDC157]/20 text-[#EDC157]',
   educator: 'bg-blue-500/20 text-blue-400',
 };
 
@@ -93,7 +93,7 @@ export const Sidebar = () => {
   return (
     <aside className="w-64 panel flex flex-col h-screen flex-shrink-0 border-r border-white/[0.06]">
       {/* Accent strip — echoes the modal/drawer accent for a consistent brand thread */}
-      <div className="h-[3px] bg-gradient-to-r from-[#FF6B35] via-[#FF9A6B] to-[#FFD166] flex-shrink-0" />
+      <div className="h-[3px] bg-gradient-to-r from-[#FF6B35] via-[#FF9A6B] to-[#EDC157] flex-shrink-0" />
 
       {/* Brand */}
       <div className="px-6 py-5 border-b border-white/[0.06]">
@@ -142,7 +142,7 @@ export const Sidebar = () => {
                       }`
                     }
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFD166]/60 flex-shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#EDC157]/60 flex-shrink-0" />
                     <span className="truncate">{school.name}</span>
                   </NavLink>
                   <NavLink

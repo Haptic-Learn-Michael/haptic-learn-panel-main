@@ -99,9 +99,11 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-[#1A0533] relative overflow-hidden flex items-center justify-center">
-      {/* Base gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#FF6B35]/20 via-[#2C0B50]/60 to-[#1A0533]" />
+    <div className="min-h-screen w-screen bg-[#25113E] relative overflow-hidden flex items-center justify-center">
+      {/* Base gradient — the app's own auth-moment treatment (purple.mid → purple.deep):
+          purple is reserved for this login/register moment in the mobile app's palette,
+          not smeared across every task screen, so the rest of the panel stays neutral. */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#FF6B35]/20 via-[#3B2754]/55 to-[#25113E]" />
 
       {/* Noise texture */}
       <div
@@ -120,14 +122,15 @@ export const LoginPage = () => {
         transition={{ duration: 8, repeat: Infinity, repeatType: 'mirror' }}
       />
       <motion.div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90vh] h-[60vh] rounded-t-full bg-[#FFD166]/10 blur-[80px]"
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90vh] h-[60vh] rounded-t-full bg-[#EDC157]/10 blur-[80px]"
         animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.05, 1] }}
         transition={{ duration: 7, repeat: Infinity, repeatType: 'mirror', delay: 1 }}
       />
 
       {/* Ambient orbs */}
       <div className="absolute left-1/4 top-1/3 w-80 h-80 bg-[#FF6B35]/8 rounded-full blur-[120px] animate-pulse" />
-      <div className="absolute right-1/4 bottom-1/3 w-80 h-80 bg-[#FFD166]/8 rounded-full blur-[100px] animate-pulse delay-1000" />
+      <div className="absolute right-1/4 bottom-1/3 w-80 h-80 bg-[#EDC157]/8 rounded-full blur-[100px] animate-pulse delay-1000" />
+      <div className="absolute right-[10%] top-[38%] w-56 h-56 bg-[#3B2754]/60 rounded-full blur-[90px]" />
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -171,12 +174,12 @@ export const LoginPage = () => {
                 transition={{ top: { duration: 2.5, ease: 'easeInOut', repeat: Infinity, repeatDelay: 1.5, delay: 0.6 }, opacity: { duration: 1.2, repeat: Infinity, repeatType: 'mirror', delay: 0.6 } }}
               />
               <motion.div
-                className="absolute bottom-0 right-0 h-[2px] w-[40%] bg-gradient-to-r from-transparent via-[#FFD166] to-transparent"
+                className="absolute bottom-0 right-0 h-[2px] w-[40%] bg-gradient-to-r from-transparent via-[#EDC157] to-transparent"
                 animate={{ right: ['-40%', '100%'], opacity: [0.3, 0.7, 0.3] }}
                 transition={{ right: { duration: 2.5, ease: 'easeInOut', repeat: Infinity, repeatDelay: 1.5, delay: 1.2 }, opacity: { duration: 1.2, repeat: Infinity, repeatType: 'mirror', delay: 1.2 } }}
               />
               <motion.div
-                className="absolute bottom-0 left-0 h-[40%] w-[2px] bg-gradient-to-b from-transparent via-[#FFD166] to-transparent"
+                className="absolute bottom-0 left-0 h-[40%] w-[2px] bg-gradient-to-b from-transparent via-[#EDC157] to-transparent"
                 animate={{ bottom: ['-40%', '100%'], opacity: [0.3, 0.7, 0.3] }}
                 transition={{ bottom: { duration: 2.5, ease: 'easeInOut', repeat: Infinity, repeatDelay: 1.5, delay: 1.8 }, opacity: { duration: 1.2, repeat: Infinity, repeatType: 'mirror', delay: 1.8 } }}
               />
@@ -184,15 +187,21 @@ export const LoginPage = () => {
               {/* Corner glow dots */}
               <motion.div className="absolute top-0 left-0 h-[6px] w-[6px] rounded-full bg-[#FF6B35]/60 blur-[1px]" animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ duration: 2, repeat: Infinity, repeatType: 'mirror' }} />
               <motion.div className="absolute top-0 right-0 h-[6px] w-[6px] rounded-full bg-[#FF6B35]/60 blur-[1px]" animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ duration: 2.4, repeat: Infinity, repeatType: 'mirror', delay: 0.5 }} />
-              <motion.div className="absolute bottom-0 right-0 h-[6px] w-[6px] rounded-full bg-[#FFD166]/60 blur-[1px]" animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ duration: 2.2, repeat: Infinity, repeatType: 'mirror', delay: 1 }} />
-              <motion.div className="absolute bottom-0 left-0 h-[6px] w-[6px] rounded-full bg-[#FFD166]/60 blur-[1px]" animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ duration: 2.3, repeat: Infinity, repeatType: 'mirror', delay: 1.5 }} />
+              <motion.div className="absolute bottom-0 right-0 h-[6px] w-[6px] rounded-full bg-[#EDC157]/60 blur-[1px]" animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ duration: 2.2, repeat: Infinity, repeatType: 'mirror', delay: 1 }} />
+              <motion.div className="absolute bottom-0 left-0 h-[6px] w-[6px] rounded-full bg-[#EDC157]/60 blur-[1px]" animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ duration: 2.3, repeat: Infinity, repeatType: 'mirror', delay: 1.5 }} />
             </div>
 
             {/* Card border hover */}
-            <div className="absolute -inset-[0.5px] rounded-2xl bg-gradient-to-br from-[#FF6B35]/10 via-white/5 to-[#FFD166]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute -inset-[0.5px] rounded-2xl bg-gradient-to-br from-[#FF6B35]/10 via-white/5 to-[#EDC157]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            {/* Glass card */}
-            <div className="relative bg-[#22063F]/70 backdrop-blur-xl rounded-2xl p-6 border border-white/[0.07] shadow-2xl overflow-hidden">
+            {/* Glass card — bg.card stays neutral even though the backdrop goes
+                purple, same as the app: the card is lit, not tinted. */}
+            <div className="relative bg-[#1E2020]/80 backdrop-blur-xl rounded-2xl p-6 border border-[rgba(167,143,196,0.18)] shadow-2xl overflow-hidden">
+              {/* Card top accent — orange fading through lavender, echoing the app's card gradient */}
+              <div
+                className="absolute inset-x-0 top-0 h-24 pointer-events-none"
+                style={{ background: 'linear-gradient(180deg, rgba(255,107,53,0.22), rgba(167,143,196,0.08), transparent)' }}
+              />
               {/* Subtle grid pattern */}
               <div
                 className="absolute inset-0 opacity-[0.025]"

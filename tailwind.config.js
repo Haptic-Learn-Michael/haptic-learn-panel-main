@@ -8,14 +8,19 @@ export default {
         display: ['Syne', 'sans-serif'],
       },
       colors: {
+        // Mirrors constants/theme.ts in haptic-learn-app-main — panel and
+        // app share one palette instead of drifting into their own hues.
         brand: {
-          bg: '#1A0533',
-          surface: '#22063F',
-          elevated: '#2C0B50',
-          sidebar: '#130328',
+          base: '#0C0F0F',
+          surface: '#121414',
+          card: '#1E2020',
+          elevated: '#282A2B',
+          input: '#333535',
           primary: '#FF6B35',
           'primary-hover': '#e85c28',
-          secondary: '#FFD166',
+          accent: '#EDC157',
+          'purple-deep': '#25113E',
+          'purple-mid': '#3B2754',
         },
       },
       boxShadow: {

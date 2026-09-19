@@ -95,8 +95,8 @@ const CreateModal = ({
             {loadingLeads ? (
               <div className="h-10 bg-white/5 rounded-xl animate-pulse" />
             ) : leads.length === 0 ? (
-              <div className="flex items-center gap-2 bg-[#FFD166]/10 border border-[#FFD166]/20 rounded-xl px-3 py-2.5">
-                <span className="text-xs text-[#FFD166]/80">
+              <div className="flex items-center gap-2 bg-[#EDC157]/10 border border-[#EDC157]/20 rounded-xl px-3 py-2.5">
+                <span className="text-xs text-[#EDC157]/80">
                   No hay lead educators activas. Asigna una después.
                 </span>
               </div>
@@ -291,8 +291,8 @@ const SchoolDrawer = ({
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3 px-5 py-4 border-b border-white/[0.06]">
           <div className="surface rounded-xl p-3 flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#FFD166]/15 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Users size={15} className="text-[#FFD166]" />
+            <div className="w-8 h-8 bg-[#EDC157]/15 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Users size={15} className="text-[#EDC157]" />
             </div>
             <div>
               <p className="text-lg font-bold text-white leading-none">{loading ? '—' : educators.length}</p>
@@ -360,8 +360,8 @@ const SchoolDrawer = ({
                         key={se.id}
                         className="flex items-center gap-3 surface rounded-xl px-4 py-3"
                       >
-                        <div className="w-8 h-8 bg-[#FFD166]/15 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-[#FFD166] text-xs font-semibold">
+                        <div className="w-8 h-8 bg-[#EDC157]/15 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-[#EDC157] text-xs font-semibold">
                             {u?.full_name?.charAt(0).toUpperCase()}
                           </span>
                         </div>
@@ -372,7 +372,7 @@ const SchoolDrawer = ({
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
                             u?.status === 'active'
-                              ? 'bg-[#FFD166]/15 text-[#FFD166]'
+                              ? 'bg-[#EDC157]/15 text-[#EDC157]'
                               : 'bg-red-500/15 text-red-400'
                           }`}
                         >
@@ -567,7 +567,7 @@ export const SchoolsPage = () => {
                 <h3 className="font-semibold text-white mb-2">{s.name}</h3>
 
                 {leads.length === 0 ? (
-                  <p className="text-xs text-[#FFD166]/50 mb-2">Sin lead educators</p>
+                  <p className="text-xs text-[#EDC157]/50 mb-2">Sin lead educators</p>
                 ) : (
                   <div className="flex items-center gap-1.5 mb-2">
                     <Users size={12} className="text-white/30 flex-shrink-0" />

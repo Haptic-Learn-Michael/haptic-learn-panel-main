@@ -100,9 +100,9 @@ const AddLeadModal = ({
           ) : (
             <ModalField label="Seleccionar lead educator" required>
               <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)} required className={inputCls}>
-                <option value="" className="bg-[#2C0B50] text-white">— Seleccionar —</option>
+                <option value="" className="bg-[#282A2B] text-white">— Seleccionar —</option>
                 {leads.map((u) => (
-                  <option key={u.id} value={u.id} className="bg-[#2C0B50] text-white">
+                  <option key={u.id} value={u.id} className="bg-[#282A2B] text-white">
                     {u.full_name} ({u.email})
                   </option>
                 ))}
@@ -373,7 +373,7 @@ export const SchoolDetailPage = () => {
                   className={`px-3 py-1.5 text-xs font-medium rounded-xl transition-colors disabled:opacity-40 ${
                     school.is_active
                       ? 'bg-white/8 text-white/50 hover:bg-white/12'
-                      : 'bg-[#FFD166]/15 text-[#FFD166] hover:bg-[#FFD166]/25'
+                      : 'bg-[#EDC157]/15 text-[#EDC157] hover:bg-[#EDC157]/25'
                   }`}
                 >
                   {school.is_active ? 'Desactivar' : 'Activar'}
@@ -412,7 +412,7 @@ export const SchoolDetailPage = () => {
             </div>
 
             {leads.length === 0 ? (
-              <p className="text-sm text-[#FFD166]/50">Sin leads asignadas.</p>
+              <p className="text-sm text-[#EDC157]/50">Sin leads asignadas.</p>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {leads.map((l) => (
@@ -458,8 +458,8 @@ export const SchoolDetailPage = () => {
           </div>
         </div>
         <div className="surface border border-white/[0.08] rounded-2xl p-4 flex items-center gap-3">
-          <div className="w-9 h-9 bg-[#FFD166]/15 rounded-xl flex items-center justify-center">
-            <Users size={18} className="text-[#FFD166]" />
+          <div className="w-9 h-9 bg-[#EDC157]/15 rounded-xl flex items-center justify-center">
+            <Users size={18} className="text-[#EDC157]" />
           </div>
           <div>
             <p className="text-2xl font-bold text-white">{educators.length}</p>
@@ -566,8 +566,8 @@ export const SchoolDetailPage = () => {
                       <tr key={se.id} className="hover:bg-white/[0.03] transition-colors">
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 bg-[#FFD166]/15 rounded-full flex items-center justify-center flex-shrink-0">
-                              <span className="text-[#FFD166] text-xs font-semibold">
+                            <div className="w-8 h-8 bg-[#EDC157]/15 rounded-full flex items-center justify-center flex-shrink-0">
+                              <span className="text-[#EDC157] text-xs font-semibold">
                                 {u?.full_name?.charAt(0).toUpperCase()}
                               </span>
                             </div>
@@ -579,7 +579,7 @@ export const SchoolDetailPage = () => {
                           <span
                             className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
                               u?.status === 'active'
-                                ? 'bg-[#FFD166]/20 text-[#FFD166]'
+                                ? 'bg-[#EDC157]/20 text-[#EDC157]'
                                 : 'bg-red-500/20 text-red-400'
                             }`}
                           >

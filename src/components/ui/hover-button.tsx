@@ -88,7 +88,7 @@ const HoverButton = React.forwardRef<HTMLButtonElement, HoverButtonProps>(
         onPointerLeave={() => setIsListening(false)}
         style={{
           '--circle-start': '#FF6B35',
-          '--circle-end': '#FFD166',
+          '--circle-end': '#EDC157',
           fontFamily: "'Outfit', sans-serif",
         } as React.CSSProperties}
         {...props}

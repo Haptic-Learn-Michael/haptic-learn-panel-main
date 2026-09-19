@@ -27,7 +27,7 @@ export const Modal = ({
       className={`elevated border border-white/[0.08] rounded-2xl shadow-2xl w-full ${maxWidth} animate-modal-in overflow-hidden`}
     >
       {/* Gradient accent strip */}
-      <div className="h-[3px] bg-gradient-to-r from-[#FF6B35] via-[#FF9A6B] to-[#FFD166]" />
+      <div className="h-[3px] bg-gradient-to-r from-[#FF6B35] via-[#FF9A6B] to-[#EDC157]" />
 
       {/* Header */}
       <div className="flex items-center gap-3 px-6 py-4 border-b border-white/[0.06]">
@@ -108,7 +108,7 @@ export const Drawer = ({
   <div className="fixed inset-0 z-50 flex justify-end">
     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
     <div className="relative panel border-l border-white/[0.08] w-[460px] max-w-[90vw] h-full flex flex-col shadow-2xl animate-drawer-in">
-      <div className="h-[3px] bg-gradient-to-r from-[#FF6B35] via-[#FF9A6B] to-[#FFD166] flex-shrink-0" />
+      <div className="h-[3px] bg-gradient-to-r from-[#FF6B35] via-[#FF9A6B] to-[#EDC157] flex-shrink-0" />
       <div className="flex items-center gap-3 px-5 py-4 border-b border-white/[0.06] flex-shrink-0">
         {Icon && (
           <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-[#FF6B35]/15">

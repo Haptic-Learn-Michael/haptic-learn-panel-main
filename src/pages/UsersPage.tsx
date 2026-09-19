@@ -7,7 +7,7 @@ import { Modal, ModalBody, ModalFooter, ModalError, ModalField, BtnCancel, BtnPr
 
 const roleColors: Record<string, string> = {
   admin: 'bg-[#FF6B35]/20 text-[#FF6B35]',
-  lead_educator: 'bg-[#FFD166]/20 text-[#FFD166]',
+  lead_educator: 'bg-[#EDC157]/20 text-[#EDC157]',
   educator: 'bg-white/10 text-white/70',
   student: 'bg-white/[0.07] text-white/50',
 };
@@ -20,7 +20,7 @@ const roleLabels: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  active: 'bg-[#FFD166]/20 text-[#FFD166]',
+  active: 'bg-[#EDC157]/20 text-[#EDC157]',
   pending: 'bg-white/10 text-white/55',
   suspended: 'bg-red-500/20 text-red-400',
 };
@@ -128,7 +128,7 @@ const CreateUserModal = ({
               className={inputCls}
             >
               {ROLES.map((r) => (
-                <option key={r.value} value={r.value} className="bg-[#2C0B50] text-white">
+                <option key={r.value} value={r.value} className="bg-[#282A2B] text-white">
                   {r.label}
                 </option>
               ))}
@@ -321,7 +321,7 @@ export const UsersPage = () => {
                           <button
                             onClick={() => handleStatusChange(u, 'active')}
                             disabled={updating === u.id}
-                            className="px-2.5 py-1 text-xs font-medium bg-[#FFD166]/15 text-[#FFD166] hover:bg-[#FFD166]/25 rounded-lg transition-colors disabled:opacity-40"
+                            className="px-2.5 py-1 text-xs font-medium bg-[#EDC157]/15 text-[#EDC157] hover:bg-[#EDC157]/25 rounded-lg transition-colors disabled:opacity-40"
                           >
                             Activar
                           </button>

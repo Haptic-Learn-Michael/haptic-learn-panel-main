@@ -31,7 +31,7 @@ import type {
 // ── Status colors ─────────────────────────────────────────────────────────────
 
 const statusColors: Record<string, string> = {
-  active: 'bg-[#FFD166]/20 text-[#FFD166]',
+  active: 'bg-[#EDC157]/20 text-[#EDC157]',
   pending: 'bg-white/10 text-white/55',
   suspended: 'bg-red-500/20 text-red-400',
 };
@@ -42,7 +42,7 @@ const contentTypeMeta: Record<ContentType, { label: string; color: string; Icon:
   letter:     { label: 'Letra',     color: 'bg-blue-500/15 text-blue-400',    Icon: Type },
   number:     { label: 'Número',    color: 'bg-violet-500/15 text-violet-400', Icon: Hash },
   braille:    { label: 'Braille',   color: 'bg-[#FF6B35]/15 text-[#FF6B35]', Icon: Zap },
-  quiz_mc:    { label: 'Quiz',      color: 'bg-[#FFD166]/15 text-[#FFD166]', Icon: HelpCircle },
+  quiz_mc:    { label: 'Quiz',      color: 'bg-[#EDC157]/15 text-[#EDC157]', Icon: HelpCircle },
   quiz_voice: { label: 'Quiz Voz',  color: 'bg-emerald-500/15 text-emerald-400', Icon: Mic },
 };
 
@@ -53,12 +53,12 @@ const getLevel = (pct: number) =>
 
 const levelColors: Record<string, string> = {
   Inicial: 'bg-white/[0.08] text-white/45',
-  'En progreso': 'bg-[#FFD166]/15 text-[#FFD166]',
+  'En progreso': 'bg-[#EDC157]/15 text-[#EDC157]',
   Avanzado: 'bg-emerald-500/15 text-emerald-400',
 };
 
 const barColor = (pct: number) =>
-  pct <= 30 ? 'bg-white/25' : pct <= 79 ? 'bg-[#FFD166]' : 'bg-emerald-400';
+  pct <= 30 ? 'bg-white/25' : pct <= 79 ? 'bg-[#EDC157]' : 'bg-emerald-400';
 
 const ProgressBar = ({ pct, thin }: { pct: number; thin?: boolean }) => (
   <div className={`w-full ${thin ? 'h-1' : 'h-1.5'} bg-white/[0.07] rounded-full overflow-hidden`}>
@@ -163,7 +163,7 @@ const AddMemberModal = ({
 
 const statusMeta = {
   completed:   { Icon: CheckCircle2, color: 'text-emerald-400', label: 'Completada' },
-  in_progress: { Icon: Clock,        color: 'text-[#FFD166]',   label: 'En curso' },
+  in_progress: { Icon: Clock,        color: 'text-[#EDC157]',   label: 'En curso' },
   not_started: { Icon: Circle,       color: 'text-white/20',    label: 'Sin comenzar' },
 };
 
@@ -217,8 +217,8 @@ const CourseCard = ({
         onClick={onToggle}
         className="w-full flex items-center gap-3 px-4 py-4 hover:bg-white/[0.02] transition-colors text-left"
       >
-        <div className="w-9 h-9 bg-[#FFD166]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-          <BookOpen size={16} className="text-[#FFD166]" />
+        <div className="w-9 h-9 bg-[#EDC157]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+          <BookOpen size={16} className="text-[#EDC157]" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -400,7 +400,7 @@ const CourseCard = ({
                                       )}
                                       <span className={`text-[9px] px-1.5 py-0.5 rounded-full flex-shrink-0 ${
                                         status === 'completed' ? 'bg-emerald-500/10 text-emerald-400'
-                                        : status === 'in_progress' ? 'bg-[#FFD166]/10 text-[#FFD166]'
+                                        : status === 'in_progress' ? 'bg-[#EDC157]/10 text-[#EDC157]'
                                         : 'bg-white/[0.04] text-white/20'
                                       }`}>
                                         {statusLabel}
@@ -775,8 +775,8 @@ export const ClassroomDetailPage = () => {
                       className="flex items-center justify-between p-3 rounded-xl border border-white/[0.07] hover:bg-white/[0.03] transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-[#FFD166]/15 rounded-full flex items-center justify-center">
-                          <span className="text-[#FFD166] text-xs font-semibold">
+                        <div className="w-8 h-8 bg-[#EDC157]/15 rounded-full flex items-center justify-center">
+                          <span className="text-[#EDC157] text-xs font-semibold">
                             {s.users?.full_name?.charAt(0).toUpperCase() ?? '?'}
                           </span>
                         </div>
