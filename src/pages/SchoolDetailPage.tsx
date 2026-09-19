@@ -29,10 +29,11 @@ import {
 import { getUsers } from '../api/users.api';
 import { useAuthStore } from '../store/auth.store';
 import type { School as SchoolType, Classroom, SchoolEducator, User } from '../types';
+import { swatchAt } from '../lib/palette';
 
 type Tab = 'salones' | 'educadoras';
 
-const inputCls = 'w-full bg-white/[0.06] border border-white/[0.12] text-white rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/40 focus:border-[#FF6B35] placeholder:text-white/25 transition';
+const inputCls = 'w-full bg-white/[0.06] border border-white/[0.12] text-white rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/40 focus:border-[#FF6B35] placeholder:text-white/50 transition';
 
 // ─── Modal: agregar lead ──────────────────────────────────────────────────────
 const AddLeadModal = ({
@@ -94,15 +95,15 @@ const AddLeadModal = ({
           {loadingLeads ? (
             <div className="h-10 bg-white/5 rounded-xl animate-pulse" />
           ) : leads.length === 0 ? (
-            <p className="text-sm text-white/45">
+            <p className="text-sm text-white/60">
               No hay lead educators activas disponibles para agregar.
             </p>
           ) : (
             <ModalField label="Seleccionar lead educator" required>
               <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)} required className={inputCls}>
-                <option value="" className="bg-[#282A2B] text-white">— Seleccionar —</option>
+                <option value="" className="bg-snow text-white">— Seleccionar —</option>
                 {leads.map((u) => (
-                  <option key={u.id} value={u.id} className="bg-[#282A2B] text-white">
+                  <option key={u.id} value={u.id} className="bg-snow text-white">
                     {u.full_name} ({u.email})
                   </option>
                 ))}
@@ -176,7 +177,7 @@ const CreateEducatorModal = ({
                 minLength={8}
                 required
               />
-              <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors">
+              <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/60 transition-colors">
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
@@ -298,12 +299,12 @@ export const SchoolDetailPage = () => {
       <div className="space-y-4 animate-pulse">
         <div className="h-8 bg-white/8 rounded-xl w-1/3" />
         <div className="h-4 bg-white/5 rounded w-1/4" />
-        <div className="h-48 surface border border-white/[0.08] rounded-2xl" />
+        <div className="h-48 surface rounded-3xl" />
       </div>
     );
   }
 
-  if (!school) return <p className="text-white/40 text-sm">Colegio no encontrado.</p>;
+  if (!school) return <p className="text-white/60 text-sm">Colegio no encontrado.</p>;
 
   const leads = school.school_leads ?? [];
 
@@ -313,12 +314,12 @@ export const SchoolDetailPage = () => {
       <div className="mb-6">
         <Link
           to="/schools"
-          className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white mb-4 transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white mb-4 transition-colors"
         >
           <ArrowLeft size={15} /> Colegios
         </Link>
 
-        <div className="surface border border-white/[0.08] rounded-2xl p-5">
+        <div className="surface rounded-3xl p-5">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div
@@ -328,7 +329,7 @@ export const SchoolDetailPage = () => {
               >
                 <Building2
                   size={24}
-                  className={school.is_active ? 'text-[#FF6B35]' : 'text-white/30'}
+                  className={school.is_active ? 'text-[#E4531D]' : 'text-white/50'}
                 />
               </div>
               <div className="min-w-0 flex-1">
@@ -341,10 +342,10 @@ export const SchoolDetailPage = () => {
                       onKeyDown={(e) => { if (e.key === 'Enter') handleSaveName(); if (e.key === 'Escape') setEditingName(false); }}
                       className="bg-white/[0.06] border border-[#FF6B35]/40 text-white rounded-xl px-3 py-1.5 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/40 min-w-0 flex-1"
                     />
-                    <button onClick={handleSaveName} disabled={savingName} className="text-[#FF6B35] hover:text-[#e85c28] disabled:opacity-40 flex-shrink-0">
+                    <button onClick={handleSaveName} disabled={savingName} className="text-[#E4531D] hover:text-[#C43E10] disabled:opacity-40 flex-shrink-0">
                       <Check size={18} />
                     </button>
-                    <button onClick={() => setEditingName(false)} className="text-white/35 hover:text-white/60 flex-shrink-0">
+                    <button onClick={() => setEditingName(false)} className="text-white/50 hover:text-white/60 flex-shrink-0">
                       <X size={18} />
                     </button>
                   </div>
@@ -352,14 +353,14 @@ export const SchoolDetailPage = () => {
                   <div className="flex items-center gap-2">
                     <h1 className="page-title text-xl truncate">{school.name}</h1>
                     {isAdmin && (
-                      <button onClick={startEditName} className="text-white/25 hover:text-white/60 transition-colors flex-shrink-0" title="Editar nombre">
+                      <button onClick={startEditName} className="text-white/50 hover:text-white/60 transition-colors flex-shrink-0" title="Editar nombre">
                         <Pencil size={15} />
                       </button>
                     )}
                   </div>
                 )}
                 {!school.is_active && (
-                  <span className="inline-block mt-0.5 px-2 py-0.5 rounded-full text-xs bg-white/8 text-white/35">
+                  <span className="inline-block mt-0.5 px-2 py-0.5 rounded-full text-xs bg-white/8 text-white/50">
                     Inactivo
                   </span>
                 )}
@@ -373,7 +374,7 @@ export const SchoolDetailPage = () => {
                   className={`px-3 py-1.5 text-xs font-medium rounded-xl transition-colors disabled:opacity-40 ${
                     school.is_active
                       ? 'bg-white/8 text-white/50 hover:bg-white/12'
-                      : 'bg-[#EDC157]/15 text-[#EDC157] hover:bg-[#EDC157]/25'
+                      : 'bg-[#EDC157]/15 text-[#B7791F] hover:bg-[#EDC157]/25'
                   }`}
                 >
                   {school.is_active ? 'Desactivar' : 'Activar'}
@@ -381,7 +382,7 @@ export const SchoolDetailPage = () => {
                 <button
                   onClick={handleDelete}
                   disabled={deleting}
-                  className="p-1.5 text-white/20 hover:text-red-400 transition-colors disabled:opacity-30 rounded-lg hover:bg-red-500/10"
+                  className="p-1.5 text-white/50 hover:text-red-600 transition-colors disabled:opacity-30 rounded-lg hover:bg-red-500/10"
                   title="Eliminar colegio"
                 >
                   <Trash2 size={16} />
@@ -390,7 +391,7 @@ export const SchoolDetailPage = () => {
             )}
           </div>
           {deleteError && (
-            <div className="mb-3 px-3 py-2 bg-red-500/10 border border-red-500/25 rounded-xl text-xs text-red-400">
+            <div className="mb-3 px-3 py-2 bg-red-500/10 border border-red-500/25 rounded-xl text-xs text-red-600">
               {deleteError}
             </div>
           )}
@@ -398,13 +399,13 @@ export const SchoolDetailPage = () => {
           {/* Leads section */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-semibold text-white/35 uppercase tracking-wider">
+              <p className="text-xs font-semibold text-white/50 uppercase tracking-wider">
                 Lead Educators
               </p>
               {isAdmin && (
                 <button
                   onClick={() => setShowAddLead(true)}
-                  className="flex items-center gap-1 text-xs text-[#FF6B35] hover:text-[#e85c28] font-medium transition-colors"
+                  className="flex items-center gap-1 text-xs text-[#E4531D] hover:text-[#C43E10] font-medium transition-colors"
                 >
                   <UserPlus size={13} /> Agregar
                 </button>
@@ -412,7 +413,7 @@ export const SchoolDetailPage = () => {
             </div>
 
             {leads.length === 0 ? (
-              <p className="text-sm text-[#EDC157]/50">Sin leads asignadas.</p>
+              <p className="text-sm text-[#B7791F]/50">Sin leads asignadas.</p>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {leads.map((l) => (
@@ -421,7 +422,7 @@ export const SchoolDetailPage = () => {
                     className="flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 rounded-full px-3 py-1.5"
                   >
                     <div className="w-5 h-5 bg-[#FF6B35]/25 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-[#FF6B35] text-xs font-bold">
+                      <span className="text-[#E4531D] text-xs font-bold">
                         {l.users?.full_name?.charAt(0).toUpperCase()}
                       </span>
                     </div>
@@ -432,7 +433,7 @@ export const SchoolDetailPage = () => {
                       <button
                         onClick={() => handleRemoveLead(l.user_id)}
                         disabled={removingLead === l.user_id}
-                        className="text-white/25 hover:text-red-400 transition-colors ml-1 disabled:opacity-30"
+                        className="text-white/50 hover:text-red-600 transition-colors ml-1 disabled:opacity-30"
                         title="Remover lead"
                       >
                         <UserMinus size={13} />
@@ -448,22 +449,22 @@ export const SchoolDetailPage = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="surface border border-white/[0.08] rounded-2xl p-4 flex items-center gap-3">
+        <div className="surface rounded-3xl p-4 flex items-center gap-3">
           <div className="w-9 h-9 bg-[#FF6B35]/15 rounded-xl flex items-center justify-center">
-            <School size={18} className="text-[#FF6B35]" />
+            <School size={18} className="text-[#E4531D]" />
           </div>
           <div>
             <p className="text-2xl font-bold text-white">{classrooms.length}</p>
-            <p className="text-xs text-white/40">Salones</p>
+            <p className="text-xs text-white/60">Salones</p>
           </div>
         </div>
-        <div className="surface border border-white/[0.08] rounded-2xl p-4 flex items-center gap-3">
+        <div className="surface rounded-3xl p-4 flex items-center gap-3">
           <div className="w-9 h-9 bg-[#EDC157]/15 rounded-xl flex items-center justify-center">
-            <Users size={18} className="text-[#EDC157]" />
+            <Users size={18} className="text-[#B7791F]" />
           </div>
           <div>
             <p className="text-2xl font-bold text-white">{educators.length}</p>
-            <p className="text-xs text-white/40">Educadoras</p>
+            <p className="text-xs text-white/60">Educadoras</p>
           </div>
         </div>
       </div>
@@ -476,8 +477,8 @@ export const SchoolDetailPage = () => {
             onClick={() => setTab(t)}
             className={`px-4 py-2 text-sm font-medium rounded-lg capitalize transition-colors ${
               tab === t
-                ? 'bg-[#FF6B35] text-white shadow-[0_4px_20px_rgba(255,107,53,0.35)]'
-                : 'text-white/40 hover:text-white'
+                ? 'bg-[#FF6B35] text-snow shadow-[0_4px_20px_rgba(255,107,53,0.35)]'
+                : 'text-white/60 hover:text-white'
             }`}
           >
             {t}
@@ -488,40 +489,49 @@ export const SchoolDetailPage = () => {
       {/* Salones tab */}
       {tab === 'salones' && (
         classrooms.length === 0 ? (
-          <div className="surface border border-white/[0.08] rounded-2xl p-10 text-center">
-            <School size={36} className="text-white/15 mx-auto mb-3" />
-            <p className="text-white/40 text-sm">No hay salones en este colegio.</p>
-            <p className="text-xs text-white/25 mt-1">
+          <div className="surface rounded-3xl p-10 text-center">
+            <School size={36} className="text-white/50 mx-auto mb-3" />
+            <p className="text-white/60 text-sm">No hay salones en este colegio.</p>
+            <p className="text-xs text-white/50 mt-1">
               Las lead educators pueden crear salones desde su panel.
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {classrooms.map((c) => (
-              <div
-                key={c.id}
-                className="surface border border-white/[0.08] rounded-2xl p-5 flex flex-col hover:border-white/15 transition-colors"
-              >
-                <div className="w-10 h-10 bg-[#FF6B35]/15 rounded-xl flex items-center justify-center mb-3">
-                  <School size={20} className="text-[#FF6B35]" />
-                </div>
-                <h3 className="font-semibold text-white mb-1">{c.name}</h3>
-                {c.description && (
-                  <p className="text-sm text-white/45 mb-3 line-clamp-2">{c.description}</p>
-                )}
-                <div className="mt-auto pt-3 border-t border-white/[0.06] flex items-center justify-between">
-                  <span className="text-xs font-mono text-white/30 bg-white/5 px-2 py-1 rounded-lg">
-                    {c.code}
-                  </span>
-                  <Link
-                    to={`/classrooms/${c.id}`}
-                    className="flex items-center gap-1 text-xs font-medium text-[#FF6B35] hover:text-[#e85c28] transition-colors"
+            {classrooms.map((c, i) => {
+              const sw = swatchAt(i);
+              return (
+                <div
+                  key={c.id}
+                  className="page-in surface rounded-3xl p-5 pt-6 flex flex-col relative overflow-hidden hover:-translate-y-1 transition-transform duration-200"
+                  style={{ animationDelay: `${Math.min(i, 9) * 40}ms`, borderColor: sw.soft, boxShadow: `0 5px 0 ${sw.soft}` }}
+                >
+                  <span className="absolute inset-x-0 top-0 h-2" style={{ background: sw.color }} aria-hidden="true" />
+                  <span
+                    className="w-11 h-11 rounded-2xl grid place-items-center text-snow mb-3"
+                    style={{ background: sw.color, boxShadow: `0 2px 0 ${sw.color}55` }}
                   >
-                    Ver <ArrowLeft size={13} className="rotate-180" />
-                  </Link>
+                    <School size={21} />
+                  </span>
+                  <h3 className="font-display font-bold text-lg text-white leading-tight mb-1">{c.name}</h3>
+                  {c.description && (
+                    <p className="text-sm text-white/60 mb-3 line-clamp-2">{c.description}</p>
+                  )}
+                  <div className="mt-auto pt-3 flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-full" style={{ background: sw.soft, color: sw.text }}>
+                      {c.code}
+                    </span>
+                    <Link
+                      to={`/classrooms/${c.id}`}
+                      className="group inline-flex items-center gap-1 text-xs font-extrabold"
+                      style={{ color: sw.text }}
+                    >
+                      Ver <ArrowLeft size={13} className="rotate-180 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )
       )}
@@ -532,7 +542,7 @@ export const SchoolDetailPage = () => {
           <div className="flex justify-end mb-4">
             <button
               onClick={() => setShowCreateEducator(true)}
-              className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-[#FF6B35] hover:bg-[#e85c28] rounded-xl transition-colors shadow-[0_4px_20px_rgba(255,107,53,0.35)]"
+              className="flex items-center gap-2 px-4 py-2.5 text-sm btn-primary"
             >
               <Plus size={16} />
               Nueva educadora
@@ -540,19 +550,19 @@ export const SchoolDetailPage = () => {
           </div>
 
           {educators.length === 0 ? (
-            <div className="surface border border-white/[0.08] rounded-2xl p-10 text-center">
-              <Users size={36} className="text-white/15 mx-auto mb-3" />
-              <p className="text-white/40 text-sm">No hay educadoras en este colegio.</p>
+            <div className="surface rounded-3xl p-10 text-center">
+              <Users size={36} className="text-white/50 mx-auto mb-3" />
+              <p className="text-white/60 text-sm">No hay educadoras en este colegio.</p>
             </div>
           ) : (
-            <div className="surface border border-white/[0.08] rounded-2xl overflow-hidden">
+            <div className="surface rounded-3xl overflow-hidden">
               <table className="w-full">
                 <thead className="bg-white/[0.03]">
                   <tr>
                     {['Nombre', 'Email', 'Estado', 'Agregada'].map((h) => (
                       <th
                         key={h}
-                        className="text-left px-4 py-3 text-xs font-semibold text-white/35 uppercase tracking-wider"
+                        className="text-left px-4 py-3 text-xs font-semibold text-white/50 uppercase tracking-wider"
                       >
                         {h}
                       </th>
@@ -567,7 +577,7 @@ export const SchoolDetailPage = () => {
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 bg-[#EDC157]/15 rounded-full flex items-center justify-center flex-shrink-0">
-                              <span className="text-[#EDC157] text-xs font-semibold">
+                              <span className="text-[#B7791F] text-xs font-semibold">
                                 {u?.full_name?.charAt(0).toUpperCase()}
                               </span>
                             </div>
@@ -579,14 +589,14 @@ export const SchoolDetailPage = () => {
                           <span
                             className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
                               u?.status === 'active'
-                                ? 'bg-[#EDC157]/20 text-[#EDC157]'
-                                : 'bg-red-500/20 text-red-400'
+                                ? 'bg-[#EDC157]/20 text-[#B7791F]'
+                                : 'bg-red-500/20 text-red-600'
                             }`}
                           >
                             {u?.status === 'active' ? 'Activa' : u?.status}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-sm text-white/40">
+                        <td className="px-4 py-3 text-sm text-white/60">
                           {new Date(se.added_at).toLocaleDateString('es', {
                             day: '2-digit',
                             month: 'short',

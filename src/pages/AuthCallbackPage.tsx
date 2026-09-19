@@ -62,7 +62,7 @@ export const AuthCallbackPage = () => {
     <div className="app-shell min-h-screen w-screen flex items-center justify-center">
       <div className="flex flex-col items-center gap-3">
         <div className="w-8 h-8 border-2 border-[#FF6B35]/60 border-t-[#FF6B35] rounded-full animate-spin" />
-        <p className="text-white/40 text-sm font-sans">Verificando cuenta...</p>
+        <p className="text-white/60 text-sm font-sans">Verificando cuenta...</p>
       </div>
     </div>
   );

@@ -30,13 +30,13 @@ const getLevel = (pct: number) =>
   pct <= 30 ? 'Inicial' : pct <= 79 ? 'En progreso' : 'Avanzado';
 
 const levelColors: Record<string, string> = {
-  Inicial: 'bg-white/[0.08] text-white/45',
-  'En progreso': 'bg-[#EDC157]/15 text-[#EDC157]',
-  Avanzado: 'bg-emerald-500/15 text-emerald-400',
+  Inicial: 'bg-white/[0.08] text-white/60',
+  'En progreso': 'bg-[#EDC157]/15 text-[#B7791F]',
+  Avanzado: 'bg-emerald-500/15 text-emerald-600',
 };
 
 const barColor = (pct: number) =>
-  pct <= 30 ? 'bg-white/25' : pct <= 79 ? 'bg-[#EDC157]' : 'bg-emerald-400';
+  pct <= 30 ? 'bg-white/25' : pct <= 79 ? 'bg-[#FFB703]' : 'bg-emerald-400';
 
 const computeStats = (classroom: Classroom, summary: ClassroomSummary): ClassroomStats => {
   const { courses, students, items, progress } = summary;
@@ -86,11 +86,11 @@ const computeStats = (classroom: Classroom, summary: ClassroomSummary): Classroo
 // ─── Content type metadata ─────────────────────────────────────────────────────
 
 const contentTypeMeta: Record<string, { label: string; color: string }> = {
-  letter:     { label: 'Letra',    color: 'bg-blue-500/15 text-blue-400' },
+  letter:     { label: 'Letra',    color: 'bg-blue-500/15 text-blue-600' },
   number:     { label: 'Número',   color: 'bg-violet-500/15 text-violet-400' },
-  braille:    { label: 'Braille',  color: 'bg-[#FF6B35]/15 text-[#FF6B35]' },
-  quiz_mc:    { label: 'Quiz',     color: 'bg-[#EDC157]/15 text-[#EDC157]' },
-  quiz_voice: { label: 'Quiz Voz', color: 'bg-emerald-500/15 text-emerald-400' },
+  braille:    { label: 'Braille',  color: 'bg-[#FF6B35]/15 text-[#E4531D]' },
+  quiz_mc:    { label: 'Quiz',     color: 'bg-[#EDC157]/15 text-[#B7791F]' },
+  quiz_voice: { label: 'Quiz Voz', color: 'bg-emerald-500/15 text-emerald-600' },
 };
 
 const contentTypeIcon: Record<string, React.ElementType> = {
@@ -105,14 +105,14 @@ const StatCard = ({
   label: string; value: string | number; sub?: string;
   icon: React.ElementType; iconBg: string; iconColor: string; loading: boolean;
 }) => (
-  <div className="surface border border-white/[0.08] rounded-2xl p-5 flex items-center gap-4">
-    <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${iconBg}`}>
+  <div className="surface rounded-3xl p-5 flex items-center gap-4 transition-transform duration-200 hover:-translate-y-0.5">
+    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${iconBg}`}>
       <Icon size={22} className={iconColor} />
     </div>
     <div>
-      <p className="text-xs text-white/40 font-medium">{label}</p>
-      {loading ? <div className="h-8 w-14 bg-white/10 animate-pulse rounded-lg mt-1" /> : <p className="text-2xl font-bold text-white leading-tight">{value}</p>}
-      {sub && !loading && <p className="text-xs text-white/30 mt-0.5">{sub}</p>}
+      <p className="text-xs text-white/60 font-medium">{label}</p>
+      {loading ? <div className="h-8 w-14 bg-white/10 animate-pulse rounded-lg mt-1" /> : <p className="font-display text-3xl font-bold text-white leading-none mt-0.5">{value}</p>}
+      {sub && !loading && <p className="text-xs text-white/50 mt-0.5">{sub}</p>}
     </div>
   </div>
 );
@@ -126,9 +126,9 @@ const ProgressBar = ({ pct, thin }: { pct: number; thin?: boolean }) => (
 // ─── Activity detail row ──────────────────────────────────────────────────────
 
 const statusMeta = {
-  completed:   { Icon: CheckCircle2, color: 'text-emerald-400',  label: 'Completada' },
-  in_progress: { Icon: Clock,        color: 'text-[#EDC157]',    label: 'En curso' },
-  not_started: { Icon: Circle,       color: 'text-white/20',     label: 'Sin comenzar' },
+  completed:   { Icon: CheckCircle2, color: 'text-emerald-600',  label: 'Completada' },
+  in_progress: { Icon: Clock,        color: 'text-[#B7791F]',    label: 'En curso' },
+  not_started: { Icon: Circle,       color: 'text-white/50',     label: 'Sin comenzar' },
 };
 
 const ActivityRow = ({
@@ -140,13 +140,13 @@ const ActivityRow = ({
 }) => {
   const status = progress?.status ?? 'not_started';
   const { Icon, color, label } = statusMeta[status];
-  const meta = contentTypeMeta[item.content_type] ?? { label: item.content_type, color: 'bg-white/10 text-white/40' };
+  const meta = contentTypeMeta[item.content_type] ?? { label: item.content_type, color: 'bg-white/10 text-white/60' };
   const TypeIcon = contentTypeIcon[item.content_type] ?? BookOpen;
 
   return (
     <div className={`flex items-center gap-2.5 py-2 px-3 rounded-lg ${status === 'not_started' ? 'opacity-50' : ''}`}>
       <Icon size={14} className={`flex-shrink-0 ${color}`} />
-      <span className="text-[10px] font-mono text-white/20 w-4 text-right flex-shrink-0">
+      <span className="text-[10px] font-mono text-white/50 w-4 text-right flex-shrink-0">
         {item.sort_order + 1}
       </span>
       <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-medium flex-shrink-0 ${meta.color}`}>
@@ -155,15 +155,15 @@ const ActivityRow = ({
       </div>
       <span className="text-xs text-white/70 flex-1 min-w-0 truncate">{item.title}</span>
       {progress?.score !== null && progress?.score !== undefined && (
-        <span className="text-[10px] text-white/30 flex-shrink-0">{progress.score} pts</span>
+        <span className="text-[10px] text-white/50 flex-shrink-0">{progress.score} pts</span>
       )}
       {progress?.attempts && progress.attempts > 0 && (
-        <span className="text-[10px] text-white/20 flex-shrink-0">{progress.attempts}× intento{progress.attempts !== 1 ? 's' : ''}</span>
+        <span className="text-[10px] text-white/50 flex-shrink-0">{progress.attempts}× intento{progress.attempts !== 1 ? 's' : ''}</span>
       )}
       <span className={`text-[10px] px-1.5 py-0.5 rounded-full flex-shrink-0 ${
-        status === 'completed' ? 'bg-emerald-500/10 text-emerald-400'
-        : status === 'in_progress' ? 'bg-[#EDC157]/10 text-[#EDC157]'
-        : 'bg-white/[0.05] text-white/25'
+        status === 'completed' ? 'bg-emerald-500/10 text-emerald-600'
+        : status === 'in_progress' ? 'bg-[#EDC157]/10 text-[#B7791F]'
+        : 'bg-white/[0.05] text-white/50'
       }`}>
         {label}
       </span>
@@ -199,17 +199,17 @@ const StudentRow = ({
         className="w-full flex items-center gap-3 py-1.5 hover:bg-white/[0.03] rounded-lg transition-colors text-left px-1"
       >
         <div className="w-6 h-6 bg-white/[0.05] rounded-full flex items-center justify-center flex-shrink-0">
-          <span className="text-white/35 text-[10px] font-semibold">
+          <span className="text-white/50 text-[10px] font-semibold">
             {student.name.charAt(0).toUpperCase()}
           </span>
         </div>
         <span className="text-xs text-white/50 w-28 truncate flex-shrink-0">{student.name}</span>
         <div className="flex-1"><ProgressBar pct={student.progress} thin /></div>
-        <span className="text-xs text-white/40 w-8 text-right flex-shrink-0">{student.progress}%</span>
+        <span className="text-xs text-white/60 w-8 text-right flex-shrink-0">{student.progress}%</span>
         <span className={`text-[10px] px-2 py-0.5 rounded-full flex-shrink-0 ${levelColors[level]}`}>{level}</span>
         {isLoading
           ? <div className="w-3 h-3 border border-white/20 border-t-white/50 rounded-full animate-spin flex-shrink-0" />
-          : <ChevronDown size={12} className={`text-white/20 transition-transform flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
+          : <ChevronDown size={12} className={`text-white/50 transition-transform flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
         }
       </button>
 
@@ -222,7 +222,7 @@ const StudentRow = ({
               ))}
             </div>
           ) : courseItems.length === 0 ? (
-            <p className="text-xs text-white/25 py-2">Sin actividades en este curso.</p>
+            <p className="text-xs text-white/50 py-2">Sin actividades en este curso.</p>
           ) : (() => {
             const progressMap: Record<string, StudentItemProgress> = {};
             (progressData ?? []).forEach((p) => { progressMap[p.content_item_id] = p; });
@@ -342,44 +342,44 @@ export const SchoolStatsPage = () => {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <Link to={`/schools/${id}`} className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white mb-4 transition-colors">
+        <Link to={`/schools/${id}`} className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white mb-4 transition-colors">
           <ArrowLeft size={15} /> Detalle del colegio
         </Link>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-[#FF6B35]/15 rounded-xl flex items-center justify-center flex-shrink-0">
-            <BarChart2 size={20} className="text-[#FF6B35]" />
+            <BarChart2 size={20} className="text-[#E4531D]" />
           </div>
           <div>
             <h1 className="page-title text-2xl">Estadísticas</h1>
-            {schoolName && <p className="text-white/40 text-sm mt-0.5">{schoolName}</p>}
+            {schoolName && <p className="text-white/60 text-sm mt-0.5">{schoolName}</p>}
           </div>
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/25 text-red-400 rounded-xl px-4 py-3 text-sm mb-5">{error}</div>
+        <div className="bg-red-500/10 border border-red-500/25 text-red-600 rounded-xl px-4 py-3 text-sm mb-5">{error}</div>
       )}
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard label="Educadoras activas" value={activeEducators}
           sub={educators.length > activeEducators ? `de ${educators.length} total` : undefined}
-          icon={Users} iconBg="bg-[#EDC157]/15" iconColor="text-[#EDC157]" loading={loading} />
+          icon={Users} iconBg="bg-[#EDC157]/15" iconColor="text-[#B7791F]" loading={loading} />
         <StatCard label="Salones" value={classroomStats.length}
-          icon={School} iconBg="bg-[#FF6B35]/15" iconColor="text-[#FF6B35]" loading={loading} />
+          icon={School} iconBg="bg-[#FF6B35]/15" iconColor="text-[#E4531D]" loading={loading} />
         <StatCard label="Estudiantes" value={totalStudents}
           sub={`${totalCourses} curso${totalCourses !== 1 ? 's' : ''}`}
           icon={Users} iconBg="bg-white/[0.07]" iconColor="text-white/55" loading={loading} />
         <StatCard label="Progreso general" value={`${overallProgress}%`}
           sub={getLevel(overallProgress)} icon={TrendingUp}
           iconBg={overallProgress <= 30 ? 'bg-white/[0.07]' : overallProgress <= 79 ? 'bg-[#EDC157]/15' : 'bg-emerald-500/15'}
-          iconColor={overallProgress <= 30 ? 'text-white/45' : overallProgress <= 79 ? 'text-[#EDC157]' : 'text-emerald-400'}
+          iconColor={overallProgress <= 30 ? 'text-white/60' : overallProgress <= 79 ? 'text-[#B7791F]' : 'text-emerald-600'}
           loading={loading} />
       </div>
 
       {/* Accordion */}
       <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-white/60 uppercase tracking-wider">Detalle por salón</h2>
+        <h2 className="font-display text-base font-bold text-white/80">Detalle por salón</h2>
         {!loading && classroomStats.length > 0 && (
           <button
             onClick={() =>
@@ -387,7 +387,7 @@ export const SchoolStatsPage = () => {
                 ? setExpanded(new Set())
                 : setExpanded(new Set(classroomStats.map((c) => c.id)))
             }
-            className="text-xs text-white/30 hover:text-white/60 transition-colors"
+            className="text-xs text-white/50 hover:text-white/60 transition-colors"
           >
             {expanded.size === classroomStats.length ? 'Colapsar todo' : 'Expandir todo'}
           </button>
@@ -396,12 +396,12 @@ export const SchoolStatsPage = () => {
 
       {loading ? (
         <div className="space-y-3">
-          {[1, 2, 3].map((i) => <div key={i} className="h-16 surface border border-white/[0.08] rounded-2xl animate-pulse" />)}
+          {[1, 2, 3].map((i) => <div key={i} className="h-16 surface rounded-3xl animate-pulse" />)}
         </div>
       ) : classroomStats.length === 0 ? (
-        <div className="surface border border-white/[0.08] rounded-2xl p-10 text-center">
-          <School size={32} className="text-white/10 mx-auto mb-3" />
-          <p className="text-sm text-white/30">No hay salones en este colegio.</p>
+        <div className="surface rounded-3xl p-10 text-center">
+          <School size={32} className="text-white/50 mx-auto mb-3" />
+          <p className="text-sm text-white/50">No hay salones en este colegio.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -409,18 +409,18 @@ export const SchoolStatsPage = () => {
             const isOpen = expanded.has(c.id);
             const level = getLevel(c.avgProgress);
             return (
-              <div key={c.id} className="surface border border-white/[0.08] rounded-2xl overflow-hidden transition-all">
+              <div key={c.id} className="surface rounded-3xl overflow-hidden transition-all">
                 {/* Classroom row */}
                 <button
                   onClick={() => toggleSalon(c.id)}
                   className="w-full flex items-center gap-4 px-5 py-4 hover:bg-white/[0.02] transition-colors text-left"
                 >
                   <div className="w-9 h-9 bg-[#FF6B35]/15 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <School size={16} className="text-[#FF6B35]" />
+                    <School size={16} className="text-[#E4531D]" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-white leading-tight">{c.name}</p>
-                    <p className="text-xs text-white/35 mt-0.5">
+                    <p className="text-xs text-white/50 mt-0.5">
                       {c.totalStudents} estudiante{c.totalStudents !== 1 ? 's' : ''} · {c.courses.length} curso{c.courses.length !== 1 ? 's' : ''}
                     </p>
                   </div>
@@ -429,40 +429,40 @@ export const SchoolStatsPage = () => {
                     <span className="text-sm font-semibold text-white/60 w-9 text-right">{c.avgProgress}%</span>
                     <span className={`text-xs px-2.5 py-1 rounded-full font-medium whitespace-nowrap ${levelColors[level]}`}>{level}</span>
                   </div>
-                  <ChevronDown size={16} className={`text-white/25 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown size={16} className={`text-white/50 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 {/* Courses */}
                 {isOpen && (
                   <div className="border-t border-white/[0.06]">
                     {c.courses.length === 0 ? (
-                      <p className="px-5 py-4 text-sm text-white/25">Sin cursos en este salón.</p>
+                      <p className="px-5 py-4 text-sm text-white/50">Sin cursos en este salón.</p>
                     ) : (
                       c.courses.map((course, idx) => (
                         <div key={course.id} className={`px-5 py-4 ${idx < c.courses.length - 1 ? 'border-b border-white/[0.04]' : ''}`}>
                           {/* Course header */}
                           <div className="flex items-start gap-3 mb-3">
                             <div className="w-7 h-7 bg-[#EDC157]/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <BookOpen size={13} className="text-[#EDC157]" />
+                              <BookOpen size={13} className="text-[#B7791F]" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 flex-wrap">
                                 <p className="text-sm font-semibold text-white">{course.title}</p>
-                                <span className="text-[10px] bg-white/[0.06] text-white/30 px-2 py-0.5 rounded-full">
+                                <span className="text-[10px] bg-white/[0.06] text-white/50 px-2 py-0.5 rounded-full">
                                   {course.itemCount} ítem{course.itemCount !== 1 ? 's' : ''}
                                 </span>
                               </div>
                               {course.itemCount > 0 && course.students.length > 0 && (
                                 <div className="flex items-center gap-2 mt-1.5">
                                   <div className="w-32"><ProgressBar pct={course.avgProgress} /></div>
-                                  <span className="text-xs text-white/35">{course.avgProgress}% promedio</span>
+                                  <span className="text-xs text-white/50">{course.avgProgress}% promedio</span>
                                   <span className={`text-xs px-2 py-0.5 rounded-full ${levelColors[getLevel(course.avgProgress)]}`}>
                                     {getLevel(course.avgProgress)}
                                   </span>
                                 </div>
                               )}
                               {course.itemCount === 0 && (
-                                <p className="text-xs text-white/25 mt-1">Sin ítems de contenido aún.</p>
+                                <p className="text-xs text-white/50 mt-1">Sin ítems de contenido aún.</p>
                               )}
                             </div>
                           </div>

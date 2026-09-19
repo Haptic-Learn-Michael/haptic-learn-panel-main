@@ -4,28 +4,40 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Lexend', 'sans-serif'],
-        display: ['Syne', 'sans-serif'],
+        sans: ['Nunito', 'sans-serif'],
+        display: ['Fredoka', 'Nunito', 'sans-serif'],
       },
       colors: {
-        // Mirrors constants/theme.ts in haptic-learn-app-main — panel and
-        // app share one palette instead of drifting into their own hues.
+        // Theme flip: every `white` utility (text-white, bg-white/5, border-white/10…)
+        // resolves to the warm "grape" ink, so existing pages read dark-on-cream
+        // without editing each class. Use `snow` for a real white (text on colored
+        // buttons, solid cards).
+        white: 'rgb(var(--ink) / <alpha-value>)',
+        snow: '#FFFFFF',
         brand: {
-          base: '#0C0F0F',
-          surface: '#121414',
-          card: '#1E2020',
-          elevated: '#282A2B',
-          input: '#333535',
+          base: '#FFF7E8',
+          surface: '#FFFFFF',
+          card: '#FFFFFF',
+          elevated: '#FFFFFF',
+          input: '#FFF1D6',
           primary: '#FF6B35',
-          'primary-hover': '#e85c28',
-          accent: '#EDC157',
-          'purple-deep': '#25113E',
-          'purple-mid': '#3B2754',
+          'primary-hover': '#F0561E',
+          accent: '#FFC93C',
+          'purple-deep': '#7C4DFF',
+          'purple-mid': '#B39DFF',
+          sky: '#4CC9F0',
+          mint: '#2FD6A0',
+          pink: '#FF6FA8',
         },
       },
+      borderRadius: {
+        xl: '1.1rem',
+        '2xl': '1.5rem',
+        '3xl': '2rem',
+      },
       boxShadow: {
-        'primary-glow': '0 4px 20px rgba(255, 107, 53, 0.35)',
-        'surface': '0 1px 3px rgba(0,0,0,0.4)',
+        'primary-glow': '0 6px 0 0 #D9491A',
+        surface: '0 4px 0 0 rgba(74,44,120,0.10)',
       },
     },
   },

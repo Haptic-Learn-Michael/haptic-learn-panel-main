@@ -1,15 +1,15 @@
 ﻿import { useEffect, useState } from 'react';
-import { Search, RefreshCw, Plus, Eye, EyeOff, UserPlus } from 'lucide-react';
+import { Search, RefreshCw, Plus, Eye, EyeOff, UserPlus, ShieldCheck, Crown, GraduationCap, Backpack, Users } from 'lucide-react';
 import { getUsers, createUser, updateUserStatus } from '../api/users.api';
 import { useAuthStore } from '../store/auth.store';
 import type { User, UserRole, UserStatus } from '../types';
 import { Modal, ModalBody, ModalFooter, ModalError, ModalField, BtnCancel, BtnPrimary } from '../components/Modal';
 
 const roleColors: Record<string, string> = {
-  admin: 'bg-[#FF6B35]/20 text-[#FF6B35]',
-  lead_educator: 'bg-[#EDC157]/20 text-[#EDC157]',
-  educator: 'bg-white/10 text-white/70',
-  student: 'bg-white/[0.07] text-white/50',
+  admin: 'bg-[#7C4DFF]/15 text-[#5B32D6]',
+  lead_educator: 'bg-emerald-100 text-emerald-700',
+  educator: 'bg-sky-100 text-sky-700',
+  student: 'bg-[#FF6B35]/15 text-[#C43E10]',
 };
 
 const roleLabels: Record<string, string> = {
@@ -20,9 +20,9 @@ const roleLabels: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  active: 'bg-[#EDC157]/20 text-[#EDC157]',
-  pending: 'bg-white/10 text-white/55',
-  suspended: 'bg-red-500/20 text-red-400',
+  active: 'bg-[#EDC157]/20 text-[#B7791F]',
+  pending: 'bg-white/10 text-white/70',
+  suspended: 'bg-red-500/20 text-red-600',
 };
 
 const statusLabels: Record<string, string> = {
@@ -38,7 +38,23 @@ const ROLES: { value: UserRole; label: string }[] = [
   { value: 'student', label: 'Estudiante' },
 ];
 
-const inputCls = 'w-full bg-white/[0.06] border border-white/[0.12] text-white rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/40 focus:border-[#FF6B35] placeholder:text-white/25 transition';
+type Meta = { color: string; deep: string; soft: string; text: string; plural: string; Icon: typeof Users };
+
+const ROLE_META: Record<UserRole, Meta> = {
+  admin:         { color: '#7C4DFF', deep: '#5B32D6', soft: '#EDE5FF', text: '#5B32D6', plural: 'Admins',      Icon: ShieldCheck },
+  lead_educator: { color: '#2FD6A0', deep: '#14A97B', soft: '#D9F8EC', text: '#0B7A57', plural: 'Directoras',  Icon: Crown },
+  educator:      { color: '#4CC9F0', deep: '#1FA3CE', soft: '#DDF5FD', text: '#0C6E8E', plural: 'Educadoras',  Icon: GraduationCap },
+  student:       { color: '#FF6B35', deep: '#D9491A', soft: '#FFE6DA', text: '#B93C10', plural: 'Estudiantes', Icon: Backpack },
+};
+const ALL_META: Meta = { color: '#FFB703', deep: '#D99000', soft: '#FFF0C2', text: '#7A5200', plural: 'Todos', Icon: Users };
+
+const STATUS_META: Record<string, { dot: string; text: string }> = {
+  active:    { dot: '#2FD6A0', text: '#0B7A57' },
+  pending:   { dot: '#FFB703', text: '#8A5A00' },
+  suspended: { dot: '#EF4444', text: '#B91C1C' },
+};
+
+const inputCls = 'w-full bg-white/[0.06] border border-white/[0.12] text-white rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/40 focus:border-[#FF6B35] placeholder:text-white/50 transition';
 
 const CreateUserModal = ({
   onClose,
@@ -114,7 +130,7 @@ const CreateUserModal = ({
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/60 transition-colors"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -128,7 +144,7 @@ const CreateUserModal = ({
               className={inputCls}
             >
               {ROLES.map((r) => (
-                <option key={r.value} value={r.value} className="bg-[#282A2B] text-white">
+                <option key={r.value} value={r.value} className="bg-snow text-white">
                   {r.label}
                 </option>
               ))}
@@ -205,10 +221,10 @@ export const UsersPage = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
         <div>
           <h1 className="page-title text-3xl">Usuarios</h1>
-          <p className="text-white/45 text-sm mt-0.5">
+          <p className="text-white/60 text-sm mt-0.5">
             {filtered.length !== users.length
               ? `${filtered.length} de ${users.length} usuarios`
               : `${users.length} usuarios registrados`}
@@ -224,7 +240,7 @@ export const UsersPage = () => {
           </button>
           <button
             onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-[#FF6B35] hover:bg-[#e85c28] rounded-xl transition-colors shadow-[0_4px_20px_rgba(255,107,53,0.35)]"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm btn-primary"
           >
             <Plus size={16} />
             Nuevo usuario
@@ -233,117 +249,137 @@ export const UsersPage = () => {
       </div>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/25 text-red-400 rounded-xl px-4 py-3 text-sm mb-4">
+        <div className="bg-red-500/10 border border-red-500/25 text-red-600 rounded-xl px-4 py-3 text-sm mb-4">
           {error}
         </div>
       )}
 
-      <div className="surface border border-white/[0.08] rounded-2xl overflow-hidden">
-        <div className="p-4 border-b border-white/[0.06] flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
-            <input
-              type="text"
-              placeholder="Buscar por nombre o email…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-sm bg-white/[0.06] border border-white/[0.10] text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/40 focus:border-[#FF6B35] placeholder:text-white/25 transition"
-            />
-          </div>
-          <div className="flex items-center gap-1.5 flex-wrap">
-            {(['all', ...ROLES.map((r) => r.value)] as const).map((r) => {
-              const label = r === 'all' ? 'Todos' : roleLabels[r];
-              const active = roleFilter === r;
-              const color = r !== 'all' ? roleColors[r] : '';
-              return (
-                <button
-                  key={r}
-                  onClick={() => setRoleFilter(r)}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors whitespace-nowrap ${
-                    active
-                      ? 'bg-[#FF6B35] text-white shadow-[0_2px_12px_rgba(255,107,53,0.4)]'
-                      : r === 'all'
-                      ? 'bg-white/[0.07] text-white/50 hover:bg-white/12 hover:text-white'
-                      : `${color} opacity-70 hover:opacity-100`
-                  }`}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {loading ? (
-          <div className="p-8 text-center text-white/30 text-sm">Cargando usuarios…</div>
-        ) : filtered.length === 0 ? (
-          <div className="p-8 text-center text-white/30 text-sm">No se encontraron usuarios.</div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-white/[0.03]">
-                <tr>
-                  {['Nombre', 'Email', 'Rol', 'Estado', 'Registrado', 'Acciones'].map((h) => (
-                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-white/35 uppercase tracking-wider">
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/[0.04]">
-                {filtered.map((u) => (
-                  <tr key={u.id} className="hover:bg-white/[0.03] transition-colors">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 bg-[#FF6B35]/15 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-[#FF6B35] text-xs font-semibold">
-                            {u.full_name.charAt(0).toUpperCase()}
-                          </span>
-                        </div>
-                        <span className="text-sm font-medium text-white">{u.full_name}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-white/50">{u.email}</td>
-                    <td className="px-4 py-3">
-                      <Badge value={u.role} map={roleColors} labelMap={roleLabels} />
-                    </td>
-                    <td className="px-4 py-3">
-                      <Badge value={u.status} map={statusColors} labelMap={statusLabels} />
-                    </td>
-                    <td className="px-4 py-3 text-sm text-white/40">
-                      {new Date(u.created_at).toLocaleDateString('es', {
-                        day: '2-digit', month: 'short', year: 'numeric',
-                      })}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        {u.status !== 'active' && (
-                          <button
-                            onClick={() => handleStatusChange(u, 'active')}
-                            disabled={updating === u.id}
-                            className="px-2.5 py-1 text-xs font-medium bg-[#EDC157]/15 text-[#EDC157] hover:bg-[#EDC157]/25 rounded-lg transition-colors disabled:opacity-40"
-                          >
-                            Activar
-                          </button>
-                        )}
-                        {u.status === 'active' && u.id !== me?.id && (
-                          <button
-                            onClick={() => handleStatusChange(u, 'suspended')}
-                            disabled={updating === u.id}
-                            className="px-2.5 py-1 text-xs font-medium bg-red-500/15 text-red-400 hover:bg-red-500/25 rounded-lg transition-colors disabled:opacity-40"
-                          >
-                            Suspender
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+      {/* Tiles de rol: filtran y muestran cuántos hay de cada uno */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5 mb-4">
+        {(['all', ...ROLES.map((r) => r.value)] as const).map((r) => {
+          const meta = r === 'all' ? ALL_META : ROLE_META[r];
+          const count = r === 'all' ? users.length : users.filter((u) => u.role === r).length;
+          const active = roleFilter === r;
+          const Icon = meta.Icon;
+          return (
+            <button
+              key={r}
+              onClick={() => setRoleFilter(r)}
+              aria-pressed={active}
+              className={`group text-left rounded-2xl p-3 flex items-center gap-2.5 border-2 transition-all duration-200 hover:-translate-y-1 ${
+                active ? 'bg-snow -translate-y-1' : 'bg-snow/70 border-[#EDE3FF]'
+              }`}
+              style={active ? { borderColor: meta.color, boxShadow: `0 4px 0 ${meta.soft}` } : { boxShadow: '0 3px 0 #EDE3FF' }}
+            >
+              <span
+                className="w-10 h-10 rounded-xl grid place-items-center text-snow shrink-0 transition-transform group-hover:rotate-6"
+                style={{ background: meta.color, boxShadow: `0 2px 0 ${meta.color}55` }}
+              >
+                <Icon size={19} />
+              </span>
+              <span className="min-w-0">
+                <span className="block font-display font-bold text-xl leading-none text-white">{count}</span>
+                <span className="block text-xs font-bold text-white/60 mt-1 truncate">{meta.plural}</span>
+              </span>
+            </button>
+          );
+        })}
       </div>
+
+      <div className="relative mb-4">
+        <Search size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50" />
+        <input
+          type="text"
+          placeholder="Buscar por nombre o email…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="w-full pl-11 pr-4 py-3 text-sm font-bold bg-snow border-[#EDE3FF] text-white rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#FF6B35]/20 focus:border-[#FF6B35] placeholder:text-white/50 transition"
+        />
+      </div>
+
+      {loading ? (
+        <div className="surface rounded-3xl p-8 text-center text-white/60 text-sm font-bold">Cargando usuarios…</div>
+      ) : filtered.length === 0 ? (
+        <div className="surface rounded-3xl p-10 text-center">
+          <p className="font-display text-xl font-bold text-white">Aquí no hay nadie todavía</p>
+          <p className="text-white/60 text-sm mt-1">Prueba con otro nombre o cambia el filtro.</p>
+        </div>
+      ) : (
+        <ul className="space-y-2.5">
+          {filtered.map((u, i) => {
+            const meta = ROLE_META[u.role as UserRole] ?? ALL_META;
+            const st = STATUS_META[u.status] ?? STATUS_META.pending;
+            const RoleIcon = meta.Icon;
+            const isMe = u.id === me?.id;
+            return (
+              <li
+                key={u.id}
+                className="page-in surface rounded-2xl pl-4 pr-3.5 py-2.5 relative overflow-hidden grid items-center gap-x-3.5 gap-y-1.5 grid-cols-[auto_minmax(0,1fr)_auto] md:grid-cols-[auto_minmax(0,1.6fr)_9rem_8rem_6.5rem_7.5rem] transition-transform duration-200 hover:-translate-y-0.5"
+                style={{ animationDelay: `${Math.min(i, 12) * 35}ms`, boxShadow: `0 4px 0 ${meta.soft}`, borderColor: meta.soft }}
+              >
+                {/* cinta de color del rol */}
+                <span className="absolute left-0 top-0 bottom-0 w-1.5" style={{ background: meta.color }} aria-hidden="true" />
+
+                <span
+                  className="w-9 h-9 rounded-xl grid place-items-center font-display font-bold text-base text-snow"
+                  style={{ background: meta.color, boxShadow: `0 2px 0 ${meta.color}55` }}
+                  aria-hidden="true"
+                >
+                  {u.full_name.charAt(0).toUpperCase()}
+                </span>
+
+                <div className="min-w-0">
+                  <p className="font-display font-bold text-[0.95rem] text-white leading-tight truncate">
+                    {u.full_name}
+                    {isMe && (
+                      <span className="ml-2 align-middle text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-full bg-[#FFC93C] text-[#5A3E00]">Tú</span>
+                    )}
+                  </p>
+                  <p className="text-xs font-bold text-white/60 truncate">{u.email}</p>
+                </div>
+
+                <span
+                  className="hidden md:inline-flex items-center gap-1.5 justify-self-start px-2.5 py-1 rounded-full text-[0.7rem] font-extrabold"
+                  style={{ background: meta.soft, color: meta.text }}
+                >
+                  <RoleIcon size={14} />
+                  {roleLabels[u.role] ?? u.role}
+                </span>
+
+                <span className="hidden md:inline-flex items-center gap-2 text-xs font-extrabold" style={{ color: st.text }}>
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: st.dot, boxShadow: `0 0 0 4px ${st.dot}33` }} />
+                  {statusLabels[u.status] ?? u.status}
+                </span>
+
+                <span className="hidden md:block text-xs font-bold text-white/60">
+                  {new Date(u.created_at).toLocaleDateString('es', { day: '2-digit', month: 'short', year: 'numeric' })}
+                </span>
+
+                <div className="flex justify-end">
+                  {u.status !== 'active' && (
+                    <button
+                      onClick={() => handleStatusChange(u, 'active')}
+                      disabled={updating === u.id}
+                      className="px-3 py-1 text-[0.7rem] font-extrabold rounded-full bg-[#2FD6A0] text-[#053D2B] shadow-[0_2px_0_0_#14A97B] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-40"
+                    >
+                      Activar
+                    </button>
+                  )}
+                  {u.status === 'active' && !isMe && (
+                    <button
+                      onClick={() => handleStatusChange(u, 'suspended')}
+                      disabled={updating === u.id}
+                      className="px-3 py-1 text-[0.7rem] font-extrabold rounded-full bg-snow text-red-600 border-2 border-red-200 shadow-[0_2px_0_0_#FECACA] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-40"
+                    >
+                      Suspender
+                    </button>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
       {showCreate && (
         <CreateUserModal

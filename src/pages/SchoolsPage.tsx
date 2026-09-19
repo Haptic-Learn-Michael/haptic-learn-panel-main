@@ -10,6 +10,8 @@ import {
 } from '../api/schools.api';
 import { getUsers } from '../api/users.api';
 import { useAuthStore } from '../store/auth.store';
+import { Hapti } from '../components/Hapti';
+import { swatchAt } from '../lib/palette';
 import type { School as SchoolType, SchoolEducator, Classroom, User } from '../types';
 import {
   Modal,
@@ -23,7 +25,7 @@ import {
 } from '../components/Modal';
 
 const inputCls =
-  'w-full bg-white/[0.06] border border-white/[0.12] text-white rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/40 focus:border-[#FF6B35] placeholder:text-white/25 transition';
+  'w-full bg-white/[0.06] border border-white/[0.12] text-white rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/40 focus:border-[#FF6B35] placeholder:text-white/50 transition';
 
 // ─── Create School Modal (admin) ──────────────────────────────────────────────
 const CreateModal = ({
@@ -96,7 +98,7 @@ const CreateModal = ({
               <div className="h-10 bg-white/5 rounded-xl animate-pulse" />
             ) : leads.length === 0 ? (
               <div className="flex items-center gap-2 bg-[#EDC157]/10 border border-[#EDC157]/20 rounded-xl px-3 py-2.5">
-                <span className="text-xs text-[#EDC157]/80">
+                <span className="text-xs text-[#B7791F]/80">
                   No hay lead educators activas. Asigna una después.
                 </span>
               </div>
@@ -114,13 +116,13 @@ const CreateModal = ({
                       className="w-4 h-4 rounded border-white/20 bg-white/10 accent-[#FF6B35]"
                     />
                     <div className="w-7 h-7 bg-[#FF6B35]/15 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-[#FF6B35] text-xs font-semibold">
+                      <span className="text-[#E4531D] text-xs font-semibold">
                         {u.full_name.charAt(0).toUpperCase()}
                       </span>
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm font-medium text-white truncate">{u.full_name}</p>
-                      <p className="text-xs text-white/40 truncate">{u.email}</p>
+                      <p className="text-xs text-white/60 truncate">{u.email}</p>
                     </div>
                   </label>
                 ))}
@@ -210,7 +212,7 @@ const CreateEducatorModal = ({
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/60 transition-colors"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -265,14 +267,14 @@ const SchoolDrawer = ({
         {/* Status */}
         {!school.is_active && (
           <div className="mx-5 mt-4 px-3 py-2 bg-white/5 rounded-xl">
-            <span className="text-xs text-white/35">Colegio inactivo</span>
+            <span className="text-xs text-white/50">Colegio inactivo</span>
           </div>
         )}
 
         {/* Leads */}
         {leads.length > 0 && (
           <div className="px-5 pt-4 pb-3 border-b border-white/[0.06]">
-            <p className="text-[10px] font-semibold text-white/30 uppercase tracking-widest mb-2">
+            <p className="text-[10px] font-semibold text-white/50 uppercase tracking-widest mb-2">
               Lead Educators
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -292,20 +294,20 @@ const SchoolDrawer = ({
         <div className="grid grid-cols-2 gap-3 px-5 py-4 border-b border-white/[0.06]">
           <div className="surface rounded-xl p-3 flex items-center gap-3">
             <div className="w-8 h-8 bg-[#EDC157]/15 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Users size={15} className="text-[#EDC157]" />
+              <Users size={15} className="text-[#B7791F]" />
             </div>
             <div>
               <p className="text-lg font-bold text-white leading-none">{loading ? '—' : educators.length}</p>
-              <p className="text-xs text-white/35 mt-0.5">Educadoras</p>
+              <p className="text-xs text-white/50 mt-0.5">Educadoras</p>
             </div>
           </div>
           <div className="surface rounded-xl p-3 flex items-center gap-3">
             <div className="w-8 h-8 bg-[#FF6B35]/15 rounded-lg flex items-center justify-center flex-shrink-0">
-              <School size={15} className="text-[#FF6B35]" />
+              <School size={15} className="text-[#E4531D]" />
             </div>
             <div>
               <p className="text-lg font-bold text-white leading-none">{loading ? '—' : classrooms.length}</p>
-              <p className="text-xs text-white/35 mt-0.5">Salones</p>
+              <p className="text-xs text-white/50 mt-0.5">Salones</p>
             </div>
           </div>
         </div>
@@ -318,8 +320,8 @@ const SchoolDrawer = ({
               onClick={() => setTab(t)}
               className={`px-3 py-1.5 text-xs font-medium rounded-lg capitalize transition-colors ${
                 tab === t
-                  ? 'bg-[#FF6B35] text-white shadow-[0_2px_12px_rgba(255,107,53,0.4)]'
-                  : 'text-white/40 hover:text-white hover:bg-white/5'
+                  ? 'bg-[#FF6B35] text-snow shadow-[0_3px_0_0_#D9491A]'
+                  : 'text-white/60 hover:text-white hover:bg-white/5'
               }`}
             >
               {t}
@@ -340,7 +342,7 @@ const SchoolDrawer = ({
               {canManage && (
                 <button
                   onClick={() => setShowCreate(true)}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 mb-4 text-sm font-semibold text-white bg-[#FF6B35] hover:bg-[#e85c28] rounded-xl transition-colors shadow-[0_4px_20px_rgba(255,107,53,0.35)]"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 mb-4 text-sm btn-primary"
                 >
                   <Plus size={15} />
                   Nueva educadora
@@ -348,8 +350,8 @@ const SchoolDrawer = ({
               )}
               {educators.length === 0 ? (
                 <div className="text-center py-8">
-                  <Users size={28} className="text-white/10 mx-auto mb-2" />
-                  <p className="text-sm text-white/30">No hay educadoras aún.</p>
+                  <Users size={28} className="text-white/50 mx-auto mb-2" />
+                  <p className="text-sm text-white/50">No hay educadoras aún.</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -361,19 +363,19 @@ const SchoolDrawer = ({
                         className="flex items-center gap-3 surface rounded-xl px-4 py-3"
                       >
                         <div className="w-8 h-8 bg-[#EDC157]/15 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-[#EDC157] text-xs font-semibold">
+                          <span className="text-[#B7791F] text-xs font-semibold">
                             {u?.full_name?.charAt(0).toUpperCase()}
                           </span>
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-white truncate">{u?.full_name}</p>
-                          <p className="text-xs text-white/40 truncate">{u?.email}</p>
+                          <p className="text-xs text-white/60 truncate">{u?.email}</p>
                         </div>
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
                             u?.status === 'active'
-                              ? 'bg-[#EDC157]/15 text-[#EDC157]'
-                              : 'bg-red-500/15 text-red-400'
+                              ? 'bg-[#EDC157]/15 text-[#B7791F]'
+                              : 'bg-red-500/15 text-red-600'
                           }`}
                         >
                           {u?.status === 'active' ? 'Activa' : u?.status}
@@ -388,8 +390,8 @@ const SchoolDrawer = ({
             <div>
               {classrooms.length === 0 ? (
                 <div className="text-center py-8">
-                  <School size={28} className="text-white/10 mx-auto mb-2" />
-                  <p className="text-sm text-white/30">No hay salones aún.</p>
+                  <School size={28} className="text-white/50 mx-auto mb-2" />
+                  <p className="text-sm text-white/50">No hay salones aún.</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -399,11 +401,11 @@ const SchoolDrawer = ({
                       className="flex items-center gap-3 surface rounded-xl px-4 py-3"
                     >
                       <div className="w-8 h-8 bg-[#FF6B35]/15 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <School size={14} className="text-[#FF6B35]" />
+                        <School size={14} className="text-[#E4531D]" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-white truncate">{c.name}</p>
-                        <p className="text-xs text-white/35 font-mono">{c.code}</p>
+                        <p className="text-xs text-white/50 font-mono">{c.code}</p>
                       </div>
                     </div>
                   ))}
@@ -473,10 +475,10 @@ export const SchoolsPage = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
         <div>
           <h1 className="page-title text-3xl">Colegios</h1>
-          <p className="text-white/45 text-sm mt-0.5">
+          <p className="text-white/60 text-sm mt-0.5">
             {schools.length} colegio{schools.length !== 1 ? 's' : ''} registrado{schools.length !== 1 ? 's' : ''}
           </p>
         </div>
@@ -491,7 +493,7 @@ export const SchoolsPage = () => {
           {isAdmin && (
             <button
               onClick={() => setShowCreate(true)}
-              className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-[#FF6B35] hover:bg-[#e85c28] rounded-xl transition-colors shadow-[0_4px_20px_rgba(255,107,53,0.35)]"
+              className="flex items-center gap-2 px-4 py-2.5 text-sm btn-primary"
             >
               <Plus size={16} />
               Nuevo colegio
@@ -501,7 +503,7 @@ export const SchoolsPage = () => {
       </div>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/25 text-red-400 rounded-xl px-4 py-3 text-sm mb-4">
+        <div className="bg-red-500/10 border border-red-500/25 text-red-600 rounded-xl px-4 py-3 text-sm mb-4">
           {error}
         </div>
       )}
@@ -509,7 +511,7 @@ export const SchoolsPage = () => {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="surface border border-white/[0.08] rounded-2xl p-5 animate-pulse">
+            <div key={i} className="surface rounded-3xl p-5 animate-pulse">
               <div className="h-5 bg-white/10 rounded-lg w-3/4 mb-3" />
               <div className="h-3 bg-white/5 rounded w-1/2 mb-2" />
               <div className="h-3 bg-white/5 rounded w-2/3" />
@@ -517,46 +519,48 @@ export const SchoolsPage = () => {
           ))}
         </div>
       ) : schools.length === 0 ? (
-        <div className="surface border border-white/[0.08] rounded-2xl p-12 text-center">
-          <Building2 size={40} className="text-white/15 mx-auto mb-3" />
-          <p className="text-white/40 text-sm">No hay colegios registrados aún.</p>
+        <div className="surface rounded-3xl p-12 text-center flex flex-col items-center">
+          <Hapti size={96} />
+          <p className="font-display text-xl font-bold text-white mt-2">Aún no hay colegios</p>
+          <p className="text-white/60 text-sm mt-1">Registra el primero para empezar a crear salones.</p>
           {isAdmin && (
-            <button
-              onClick={() => setShowCreate(true)}
-              className="mt-4 px-4 py-2 text-sm font-medium text-[#FF6B35] hover:text-[#e85c28] transition-colors"
-            >
-              Crear primer colegio
+            <button onClick={() => setShowCreate(true)} className="btn-primary mt-5 px-5 py-2.5 text-sm">
+              <Plus size={16} /> Crear primer colegio
             </button>
           )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {schools.map((s) => {
+          {schools.map((s, i) => {
             const leads = s.school_leads ?? [];
             const isSelected = selectedSchool?.id === s.id;
+            const sw = s.is_active ? swatchAt(i + 2) : { color: '#B8AED0', soft: '#EFEAF7', text: '#6B5A8E' };
             return (
               <div
                 key={s.id}
                 onClick={() => setSelectedSchool(isSelected ? null : s)}
-                className={`surface border rounded-2xl p-5 flex flex-col cursor-pointer transition-all ${
-                  isSelected
-                    ? 'border-[#FF6B35]/50 shadow-[0_0_0_1px_rgba(255,107,53,0.25)]'
-                    : 'border-white/[0.08] hover:border-white/20'
+                className={`page-in surface rounded-3xl p-5 pt-6 flex flex-col cursor-pointer relative overflow-hidden transition-all duration-200 hover:-translate-y-1 ${
+                  isSelected ? '-translate-y-1' : ''
                 }`}
+                style={{
+                  animationDelay: `${Math.min(i, 9) * 40}ms`,
+                  borderColor: isSelected ? sw.color : sw.soft,
+                  boxShadow: `0 5px 0 ${isSelected ? sw.color : sw.soft}`,
+                }}
               >
+                <span className="absolute inset-x-0 top-0 h-2" style={{ background: sw.color }} aria-hidden="true" />
                 <div className="flex items-start justify-between mb-3">
-                  <div
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                      s.is_active ? 'bg-[#FF6B35]/20' : 'bg-white/[0.07]'
-                    }`}
+                  <span
+                    className="w-11 h-11 rounded-2xl grid place-items-center text-snow flex-shrink-0"
+                    style={{ background: sw.color, boxShadow: `0 2px 0 ${sw.color}55` }}
                   >
-                    <Building2 size={20} className={s.is_active ? 'text-[#FF6B35]' : 'text-white/30'} />
-                  </div>
+                    <Building2 size={21} />
+                  </span>
                   {isAdmin && (
                     <button
                       onClick={(e) => { e.stopPropagation(); handleDelete(s.id); }}
                       disabled={deleting === s.id}
-                      className="text-white/20 hover:text-red-400 transition-colors disabled:opacity-30"
+                      className="p-1.5 rounded-lg text-white/50 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-30"
                       title="Eliminar colegio"
                     >
                       <Trash2 size={15} />
@@ -564,29 +568,29 @@ export const SchoolsPage = () => {
                   )}
                 </div>
 
-                <h3 className="font-semibold text-white mb-2">{s.name}</h3>
+                <h3 className="font-display font-bold text-lg text-white leading-tight mb-2">{s.name}</h3>
 
                 {leads.length === 0 ? (
-                  <p className="text-xs text-[#EDC157]/50 mb-2">Sin lead educators</p>
+                  <p className="text-xs font-bold text-[#B7791F] mb-2">Sin lead educators</p>
                 ) : (
                   <div className="flex items-center gap-1.5 mb-2">
-                    <Users size={12} className="text-white/30 flex-shrink-0" />
-                    <p className="text-xs text-white/40 truncate">
+                    <Users size={13} className="text-white/50 flex-shrink-0" />
+                    <p className="text-xs font-bold text-white/60 truncate">
                       {leads.map((l) => l.users?.full_name).join(', ')}
                     </p>
                   </div>
                 )}
 
                 {!s.is_active && (
-                  <span className="inline-block px-2 py-0.5 rounded-full text-xs bg-white/[0.07] text-white/35 self-start mb-2">
+                  <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-white/[0.07] text-white/60 self-start mb-2">
                     Inactivo
                   </span>
                 )}
 
-                <div className="mt-auto pt-3 border-t border-white/[0.06]">
-                  <p className="text-xs text-white/25">
-                    {isSelected ? 'Clic para cerrar' : 'Clic para ver detalle'}
-                  </p>
+                <div className="mt-auto pt-3">
+                  <span className="text-xs font-extrabold" style={{ color: sw.text }}>
+                    {isSelected ? 'Toca para cerrar' : 'Toca para ver detalle'}
+                  </span>
                 </div>
               </div>
             );

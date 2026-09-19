@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState, type ReactNode, type MouseEvent as ReactMouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Hapti } from '@/components/Hapti';
 import {
   ArrowRight,
   BarChart3,
   Check,
   GraduationCap,
+  Hand,
   Heart,
   Link2,
   QrCode,
@@ -121,7 +123,7 @@ const CSS = `
 .lp-hero { padding: 8.5rem 0 4rem; position: relative; }
 .lp-hero-grid { display: grid; gap: 3rem; align-items: center; }
 @media (min-width: 900px) { .lp-hero-grid { grid-template-columns: 1.1fr .9fr; } }
-.lp-hero h1 { font-size: clamp(2.6rem, 6.4vw, 4.6rem); line-height: 1.04; margin: 1.1rem 0 1.2rem; }
+.lp-hero h1 { font-size: clamp(2.6rem, 6.4vw, 4.6rem); line-height: 1.04; margin: 0 0 1.2rem; }
 .lp-cta-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
 .lp-trust { display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; margin-top: 1.8rem; font-weight: 700; font-size: .95rem; color: var(--ink-soft); }
 .lp-trust span { display: inline-flex; align-items: center; gap: .4rem; }
@@ -241,29 +243,6 @@ function Reveal({ children, delay = 0, className = '' }: { children: ReactNode; 
   );
 }
 
-/* Mascota "Hapti": una gotita sonriente con manitas */
-function Hapti({ size = 130 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 120 120" role="img" aria-label="Hapti, la mascota de HapticLearn">
-      <ellipse cx="60" cy="112" rx="30" ry="5" fill="rgba(59,42,92,.15)" />
-      <path d="M60 12c20 0 40 18 40 46 0 26-16 44-40 44S20 84 20 58C20 30 40 12 60 12z" fill="#FF6FA8" />
-      <path d="M60 12c20 0 40 18 40 46 0 26-16 44-40 44S20 84 20 58C20 30 40 12 60 12z" fill="none" stroke="#D94A85" strokeWidth="4" />
-      <ellipse cx="42" cy="34" rx="9" ry="5" fill="#fff" opacity=".45" transform="rotate(-30 42 34)" />
-      <circle cx="46" cy="58" r="9" fill="#fff" />
-      <circle cx="74" cy="58" r="9" fill="#fff" />
-      <circle cx="48" cy="60" r="4.5" fill="#3B2A5C" />
-      <circle cx="72" cy="60" r="4.5" fill="#3B2A5C" />
-      <circle cx="50" cy="58" r="1.6" fill="#fff" />
-      <circle cx="74" cy="58" r="1.6" fill="#fff" />
-      <path d="M46 78c4 8 24 8 28 0" fill="none" stroke="#3B2A5C" strokeWidth="4" strokeLinecap="round" />
-      <circle cx="36" cy="74" r="5" fill="#FFB3D1" />
-      <circle cx="84" cy="74" r="5" fill="#FFB3D1" />
-      <path d="M24 72c-8-2-12-10-8-16" fill="none" stroke="#D94A85" strokeWidth="6" strokeLinecap="round" />
-      <path d="M96 72c8-2 12-10 8-16" fill="none" stroke="#D94A85" strokeWidth="6" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 function Braille({ dots }: { dots: number[] }) {
   return (
     <span className="lp-braille" aria-hidden="true">
@@ -343,7 +322,7 @@ export function LandingPage() {
       {/* NAV */}
       <header className="lp-nav">
         <a href="#top" className="lp-logo" aria-label="HapticLearn inicio">
-          <span className="lp-logo-mark" aria-hidden="true">✋</span>
+          <span className="lp-logo-mark" aria-hidden="true"><Hand size={18} strokeWidth={2.5} /></span>
           HapticLearn
         </a>
         <nav className="lp-nav-links" aria-label="Secciones">
@@ -361,9 +340,6 @@ export function LandingPage() {
         <section className="lp-hero">
           <div className="lp-wrap lp-hero-grid">
             <div>
-              <span className="lp-pill" style={{ borderColor: '#FFD9C7', color: '#D9491A' }}>
-                <Sparkles size={15} /> Aprender jugando con el tacto
-              </span>
               <h1>
                 Escribir se siente <span className="lp-hl">mágico</span>
               </h1>
@@ -480,7 +456,7 @@ export function LandingPage() {
             <Reveal>
               <div style={{ textAlign: 'center', maxWidth: '40rem', margin: '0 auto' }}>
                 <span className="lp-pill" style={{ borderColor: '#E1D5FF', color: '#5B32D6' }}>
-                  <Sparkles size={15} /> En la app
+                  En la app
                 </span>
                 <h2 className="lp-h2" style={{ marginTop: '1rem' }}>
                   Lo que <span className="lp-hl">vivirá</span> tu peque
@@ -571,10 +547,9 @@ export function LandingPage() {
       <footer className="lp-foot">
         <div className="lp-wrap">
           <div className="lp-logo" style={{ justifyContent: 'center', marginBottom: '.6rem', color: 'var(--ink)' }}>
-            <span className="lp-logo-mark" aria-hidden="true">✋</span> HapticLearn
+            <span className="lp-logo-mark" aria-hidden="true"><Hand size={18} strokeWidth={2.5} /></span> HapticLearn
           </div>
           <p>App Educativa Accesible · Universidad Peruana de Ciencias Aplicadas (UPC) · 2026</p>
-          <p style={{ marginTop: '.3rem', fontSize: '.82rem', opacity: 0.8 }}>Hecha con ♥ para que todos los niños puedan aprender</p>
         </div>
       </footer>
     </div>

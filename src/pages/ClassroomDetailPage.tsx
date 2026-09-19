@@ -31,19 +31,19 @@ import type {
 // ── Status colors ─────────────────────────────────────────────────────────────
 
 const statusColors: Record<string, string> = {
-  active: 'bg-[#EDC157]/20 text-[#EDC157]',
+  active: 'bg-[#EDC157]/20 text-[#B7791F]',
   pending: 'bg-white/10 text-white/55',
-  suspended: 'bg-red-500/20 text-red-400',
+  suspended: 'bg-red-500/20 text-red-600',
 };
 
 // ── Content type metadata ─────────────────────────────────────────────────────
 
 const contentTypeMeta: Record<ContentType, { label: string; color: string; Icon: React.ElementType }> = {
-  letter:     { label: 'Letra',     color: 'bg-blue-500/15 text-blue-400',    Icon: Type },
+  letter:     { label: 'Letra',     color: 'bg-blue-500/15 text-blue-600',    Icon: Type },
   number:     { label: 'Número',    color: 'bg-violet-500/15 text-violet-400', Icon: Hash },
-  braille:    { label: 'Braille',   color: 'bg-[#FF6B35]/15 text-[#FF6B35]', Icon: Zap },
-  quiz_mc:    { label: 'Quiz',      color: 'bg-[#EDC157]/15 text-[#EDC157]', Icon: HelpCircle },
-  quiz_voice: { label: 'Quiz Voz',  color: 'bg-emerald-500/15 text-emerald-400', Icon: Mic },
+  braille:    { label: 'Braille',   color: 'bg-[#FF6B35]/15 text-[#E4531D]', Icon: Zap },
+  quiz_mc:    { label: 'Quiz',      color: 'bg-[#EDC157]/15 text-[#B7791F]', Icon: HelpCircle },
+  quiz_voice: { label: 'Quiz Voz',  color: 'bg-emerald-500/15 text-emerald-600', Icon: Mic },
 };
 
 // ── Progress helpers ──────────────────────────────────────────────────────────
@@ -52,13 +52,13 @@ const getLevel = (pct: number) =>
   pct <= 30 ? 'Inicial' : pct <= 79 ? 'En progreso' : 'Avanzado';
 
 const levelColors: Record<string, string> = {
-  Inicial: 'bg-white/[0.08] text-white/45',
-  'En progreso': 'bg-[#EDC157]/15 text-[#EDC157]',
-  Avanzado: 'bg-emerald-500/15 text-emerald-400',
+  Inicial: 'bg-white/[0.08] text-white/60',
+  'En progreso': 'bg-[#EDC157]/15 text-[#B7791F]',
+  Avanzado: 'bg-emerald-500/15 text-emerald-600',
 };
 
 const barColor = (pct: number) =>
-  pct <= 30 ? 'bg-white/25' : pct <= 79 ? 'bg-[#EDC157]' : 'bg-emerald-400';
+  pct <= 30 ? 'bg-white/25' : pct <= 79 ? 'bg-[#FFB703]' : 'bg-emerald-400';
 
 const ProgressBar = ({ pct, thin }: { pct: number; thin?: boolean }) => (
   <div className={`w-full ${thin ? 'h-1' : 'h-1.5'} bg-white/[0.07] rounded-full overflow-hidden`}>
@@ -144,7 +144,7 @@ const AddMemberModal = ({
             <input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              className="w-full bg-white/[0.06] border border-white/[0.12] text-white rounded-xl px-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/40 focus:border-[#FF6B35] placeholder:text-white/25 transition"
+              className="w-full bg-white/[0.06] border border-white/[0.12] text-white rounded-xl px-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/40 focus:border-[#FF6B35] placeholder:text-white/50 transition"
               placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
               required
             />
@@ -162,9 +162,9 @@ const AddMemberModal = ({
 // ── Activity + student detail ─────────────────────────────────────────────────
 
 const statusMeta = {
-  completed:   { Icon: CheckCircle2, color: 'text-emerald-400', label: 'Completada' },
-  in_progress: { Icon: Clock,        color: 'text-[#EDC157]',   label: 'En curso' },
-  not_started: { Icon: Circle,       color: 'text-white/20',    label: 'Sin comenzar' },
+  completed:   { Icon: CheckCircle2, color: 'text-emerald-600', label: 'Completada' },
+  in_progress: { Icon: Clock,        color: 'text-[#B7791F]',   label: 'En curso' },
+  not_started: { Icon: Circle,       color: 'text-white/50',    label: 'Sin comenzar' },
 };
 
 // ── CourseCard ────────────────────────────────────────────────────────────────
@@ -218,7 +218,7 @@ const CourseCard = ({
         className="w-full flex items-center gap-3 px-4 py-4 hover:bg-white/[0.02] transition-colors text-left"
       >
         <div className="w-9 h-9 bg-[#EDC157]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-          <BookOpen size={16} className="text-[#EDC157]" />
+          <BookOpen size={16} className="text-[#B7791F]" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -226,21 +226,21 @@ const CourseCard = ({
             <span
               className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
                 course.is_published
-                  ? 'bg-emerald-500/15 text-emerald-400'
-                  : 'bg-white/[0.07] text-white/35'
+                  ? 'bg-emerald-500/15 text-emerald-600'
+                  : 'bg-white/[0.07] text-white/50'
               }`}
             >
               {course.is_published ? 'Publicado' : 'Borrador'}
             </span>
           </div>
-          <p className="text-xs text-white/35 mt-0.5 truncate">
+          <p className="text-xs text-white/50 mt-0.5 truncate">
             {course.description
               ? course.description
               : course.users?.full_name
               ? `Por ${course.users.full_name}`
               : ''}
             {course.description && course.users?.full_name && (
-              <span className="text-white/20"> · Por {course.users.full_name}</span>
+              <span className="text-white/50"> · Por {course.users.full_name}</span>
             )}
           </p>
         </div>
@@ -260,12 +260,12 @@ const CourseCard = ({
               )}
             </>
           ) : (
-            <span className="text-xs text-white/20">Sin progreso aún</span>
+            <span className="text-xs text-white/50">Sin progreso aún</span>
           )}
         </div>
         <ChevronDown
           size={15}
-          className={`text-white/25 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+          className={`text-white/50 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
 
@@ -274,7 +274,7 @@ const CourseCard = ({
         <div className="border-t border-white/[0.06]">
           {/* ── Actividades ── */}
           <div className="px-5 py-4">
-            <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">
+            <p className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3">
               Actividades
             </p>
             {itemsLoading ? (
@@ -284,7 +284,7 @@ const CourseCard = ({
                 ))}
               </div>
             ) : !items || items.length === 0 ? (
-              <p className="text-xs text-white/25 py-2">
+              <p className="text-xs text-white/50 py-2">
                 Este curso no tiene actividades aún.
               </p>
             ) : (
@@ -297,7 +297,7 @@ const CourseCard = ({
                       key={item.id}
                       className="flex items-center gap-3 p-3 rounded-xl border border-white/[0.06] hover:bg-white/[0.02] transition-colors"
                     >
-                      <span className="text-[10px] font-mono text-white/20 w-5 text-right flex-shrink-0">
+                      <span className="text-[10px] font-mono text-white/50 w-5 text-right flex-shrink-0">
                         {item.sort_order + 1}
                       </span>
                       <div className={`flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-medium flex-shrink-0 ${meta.color}`}>
@@ -308,12 +308,12 @@ const CourseCard = ({
                         {item.title}
                       </span>
                       {item.talkback_text && (
-                        <span className="text-[10px] text-white/20 italic hidden sm:block truncate max-w-[120px]">
+                        <span className="text-[10px] text-white/50 italic hidden sm:block truncate max-w-[120px]">
                           "{item.talkback_text}"
                         </span>
                       )}
                       {item.haptic_patterns && (
-                        <span className="text-[10px] bg-[#FF6B35]/10 text-[#FF6B35]/60 px-2 py-0.5 rounded-lg flex-shrink-0 hidden sm:block">
+                        <span className="text-[10px] bg-[#FF6B35]/10 text-[#E4531D]/60 px-2 py-0.5 rounded-lg flex-shrink-0 hidden sm:block">
                           {item.haptic_patterns.name}
                         </span>
                       )}
@@ -327,7 +327,7 @@ const CourseCard = ({
           {/* ── Progreso por estudiante ── */}
           {progress && progress.students.length > 0 && itemCount > 0 && (
             <div className="px-5 pb-4 border-t border-white/[0.04] pt-4">
-              <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">
+              <p className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3">
                 Progreso por estudiante
               </p>
               <div className="space-y-0.5">
@@ -343,19 +343,19 @@ const CourseCard = ({
                         className="w-full flex items-center gap-3 py-1.5 px-2 rounded-lg hover:bg-white/[0.03] transition-colors text-left"
                       >
                         <div className="w-6 h-6 bg-white/[0.05] rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-white/35 text-[10px] font-semibold">
+                          <span className="text-white/50 text-[10px] font-semibold">
                             {s.name.charAt(0).toUpperCase()}
                           </span>
                         </div>
                         <span className="text-xs text-white/50 w-32 truncate flex-shrink-0">{s.name}</span>
                         <div className="flex-1"><ProgressBar pct={s.progress} thin /></div>
-                        <span className="text-xs text-white/40 w-8 text-right flex-shrink-0">{s.progress}%</span>
+                        <span className="text-xs text-white/60 w-8 text-right flex-shrink-0">{s.progress}%</span>
                         <span className={`text-[10px] px-2 py-0.5 rounded-full flex-shrink-0 ${levelColors[level]}`}>
                           {level}
                         </span>
                         {isLoading
                           ? <div className="w-3 h-3 border border-white/20 border-t-white/50 rounded-full animate-spin flex-shrink-0" />
-                          : <ChevronDown size={12} className={`text-white/20 transition-transform flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
+                          : <ChevronDown size={12} className={`text-white/50 transition-transform flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
                         }
                       </button>
 
@@ -383,7 +383,7 @@ const CourseCard = ({
                                       className={`flex items-center gap-2 py-1.5 px-2 rounded-lg ${status === 'not_started' ? 'opacity-45' : ''}`}
                                     >
                                       <Icon size={13} className={`flex-shrink-0 ${color}`} />
-                                      <span className="text-[10px] font-mono text-white/15 w-4 text-right flex-shrink-0">
+                                      <span className="text-[10px] font-mono text-white/50 w-4 text-right flex-shrink-0">
                                         {item.sort_order + 1}
                                       </span>
                                       {meta && (
@@ -393,15 +393,15 @@ const CourseCard = ({
                                       )}
                                       <span className="text-xs text-white/65 flex-1 min-w-0 truncate">{item.title}</span>
                                       {prog?.score !== null && prog?.score !== undefined && (
-                                        <span className="text-[10px] text-white/30 flex-shrink-0">{prog.score} pts</span>
+                                        <span className="text-[10px] text-white/50 flex-shrink-0">{prog.score} pts</span>
                                       )}
                                       {prog?.attempts != null && prog.attempts > 0 && (
-                                        <span className="text-[10px] text-white/20 flex-shrink-0">{prog.attempts}×</span>
+                                        <span className="text-[10px] text-white/50 flex-shrink-0">{prog.attempts}×</span>
                                       )}
                                       <span className={`text-[9px] px-1.5 py-0.5 rounded-full flex-shrink-0 ${
-                                        status === 'completed' ? 'bg-emerald-500/10 text-emerald-400'
-                                        : status === 'in_progress' ? 'bg-[#EDC157]/10 text-[#EDC157]'
-                                        : 'bg-white/[0.04] text-white/20'
+                                        status === 'completed' ? 'bg-emerald-500/10 text-emerald-600'
+                                        : status === 'in_progress' ? 'bg-[#EDC157]/10 text-[#B7791F]'
+                                        : 'bg-white/[0.04] text-white/50'
                                       }`}>
                                         {statusLabel}
                                       </span>
@@ -411,7 +411,7 @@ const CourseCard = ({
                               </div>
                             );
                           })() : (
-                            <p className="text-xs text-white/25 py-2">Sin actividades cargadas.</p>
+                            <p className="text-xs text-white/50 py-2">Sin actividades cargadas.</p>
                           )}
                         </div>
                       )}
@@ -425,7 +425,7 @@ const CourseCard = ({
           {/* No-students notice */}
           {progress && progress.students.length === 0 && (
             <div className="px-5 pb-4">
-              <p className="text-xs text-white/25">No hay estudiantes inscritos en el salón.</p>
+              <p className="text-xs text-white/50">No hay estudiantes inscritos en el salón.</p>
             </div>
           )}
         </div>
@@ -599,7 +599,7 @@ export const ClassroomDetailPage = () => {
   // ── Guards ──
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 text-white/30 text-sm">
+      <div className="flex items-center justify-center py-20 text-white/50 text-sm">
         Cargando salón…
       </div>
     );
@@ -607,7 +607,7 @@ export const ClassroomDetailPage = () => {
 
   if (error || !classroom) {
     return (
-      <div className="bg-red-500/10 border border-red-500/25 text-red-400 rounded-2xl px-5 py-4 text-sm">
+      <div className="bg-red-500/10 border border-red-500/25 text-red-600 rounded-2xl px-5 py-4 text-sm">
         {error || 'Salón no encontrado.'}
       </div>
     );
@@ -618,23 +618,23 @@ export const ClassroomDetailPage = () => {
       {/* Breadcrumb */}
       <Link
         to="/classrooms"
-        className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white mb-4 transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white mb-4 transition-colors"
       >
         <ChevronLeft size={16} /> Salones
       </Link>
 
       {/* Header */}
-      <div className="surface border border-white/[0.08] rounded-2xl p-6 mb-5">
+      <div className="surface rounded-3xl p-6 mb-5">
         <div className="flex items-start gap-4">
           <div className="w-12 h-12 bg-[#FF6B35]/15 rounded-xl flex items-center justify-center flex-shrink-0">
-            <GraduationCap size={24} className="text-[#FF6B35]" />
+            <GraduationCap size={24} className="text-[#E4531D]" />
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="page-title text-xl">{classroom.name}</h1>
             {classroom.description && (
-              <p className="text-sm text-white/45 mt-0.5">{classroom.description}</p>
+              <p className="text-sm text-white/60 mt-0.5">{classroom.description}</p>
             )}
-            <div className="flex items-center gap-4 mt-2 text-xs text-white/30">
+            <div className="flex items-center gap-4 mt-2 text-xs text-white/50">
               <span>
                 Código:{' '}
                 <span className="font-mono font-semibold text-white/60">{classroom.code}</span>
@@ -653,7 +653,7 @@ export const ClassroomDetailPage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="surface border border-white/[0.08] rounded-2xl overflow-hidden">
+      <div className="surface rounded-3xl overflow-hidden">
         <div className="flex border-b border-white/[0.06]">
           {(['educators', 'students', 'courses'] as Tab[]).map((t) => {
             const labels: Record<Tab, string> = {
@@ -673,8 +673,8 @@ export const ClassroomDetailPage = () => {
                 onClick={() => handleTabChange(t)}
                 className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 transition-colors ${
                   tab === t
-                    ? 'border-[#FF6B35] text-[#FF6B35]'
-                    : 'border-transparent text-white/40 hover:text-white'
+                    ? 'border-[#FF6B35] text-[#E4531D]'
+                    : 'border-transparent text-white/60 hover:text-white'
                 }`}
               >
                 <Icon size={15} /> {labels[t]}
@@ -688,22 +688,22 @@ export const ClassroomDetailPage = () => {
           {tab === 'educators' && (
             <>
               <div className="flex items-center justify-between mb-4">
-                <p className="text-sm text-white/40">
+                <p className="text-sm text-white/60">
                   {educators.length} educador{educators.length !== 1 ? 'es' : ''} asignado{educators.length !== 1 ? 's' : ''}
                 </p>
                 {canManage && (
                   <button
                     onClick={() => setModal('educators')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#FF6B35] border border-[#FF6B35]/30 rounded-xl hover:bg-[#FF6B35]/10 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#E4531D] border border-[#FF6B35]/30 rounded-xl hover:bg-[#FF6B35]/10 transition-colors"
                   >
                     <UserPlus size={13} /> Asignar educador
                   </button>
                 )}
               </div>
               {tabLoading ? (
-                <p className="text-sm text-white/30 text-center py-4">Cargando…</p>
+                <p className="text-sm text-white/50 text-center py-4">Cargando…</p>
               ) : educators.length === 0 ? (
-                <p className="text-sm text-white/30 text-center py-6">No hay educadores asignados.</p>
+                <p className="text-sm text-white/50 text-center py-6">No hay educadores asignados.</p>
               ) : (
                 <ul className="space-y-2">
                   {educators.map((e) => (
@@ -713,7 +713,7 @@ export const ClassroomDetailPage = () => {
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-[#FF6B35]/15 rounded-full flex items-center justify-center">
-                          <span className="text-[#FF6B35] text-xs font-semibold">
+                          <span className="text-[#E4531D] text-xs font-semibold">
                             {e.users?.full_name?.charAt(0).toUpperCase() ?? '?'}
                           </span>
                         </div>
@@ -721,7 +721,7 @@ export const ClassroomDetailPage = () => {
                           <p className="text-sm font-medium text-white">
                             {e.users?.full_name ?? 'Sin nombre'}
                           </p>
-                          <p className="text-xs text-white/35">{e.users?.email}</p>
+                          <p className="text-xs text-white/50">{e.users?.email}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -734,7 +734,7 @@ export const ClassroomDetailPage = () => {
                           <button
                             onClick={() => handleRemoveEducator(e.educator_id)}
                             disabled={removing === e.educator_id}
-                            className="text-white/20 hover:text-red-400 transition-colors disabled:opacity-30"
+                            className="text-white/50 hover:text-red-600 transition-colors disabled:opacity-30"
                           >
                             <Trash2 size={14} />
                           </button>
@@ -751,22 +751,22 @@ export const ClassroomDetailPage = () => {
           {tab === 'students' && (
             <>
               <div className="flex items-center justify-between mb-4">
-                <p className="text-sm text-white/40">
+                <p className="text-sm text-white/60">
                   {students.length} estudiante{students.length !== 1 ? 's' : ''} inscrito{students.length !== 1 ? 's' : ''}
                 </p>
                 {(canManage || user?.role === 'lead_educator') && (
                   <button
                     onClick={() => setModal('students')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#FF6B35] border border-[#FF6B35]/30 rounded-xl hover:bg-[#FF6B35]/10 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#E4531D] border border-[#FF6B35]/30 rounded-xl hover:bg-[#FF6B35]/10 transition-colors"
                   >
                     <UserPlus size={13} /> Inscribir estudiante
                   </button>
                 )}
               </div>
               {tabLoading ? (
-                <p className="text-sm text-white/30 text-center py-4">Cargando…</p>
+                <p className="text-sm text-white/50 text-center py-4">Cargando…</p>
               ) : students.length === 0 ? (
-                <p className="text-sm text-white/30 text-center py-6">No hay estudiantes inscritos.</p>
+                <p className="text-sm text-white/50 text-center py-6">No hay estudiantes inscritos.</p>
               ) : (
                 <ul className="space-y-2">
                   {students.map((s) => (
@@ -776,7 +776,7 @@ export const ClassroomDetailPage = () => {
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-[#EDC157]/15 rounded-full flex items-center justify-center">
-                          <span className="text-[#EDC157] text-xs font-semibold">
+                          <span className="text-[#B7791F] text-xs font-semibold">
                             {s.users?.full_name?.charAt(0).toUpperCase() ?? '?'}
                           </span>
                         </div>
@@ -784,12 +784,12 @@ export const ClassroomDetailPage = () => {
                           <p className="text-sm font-medium text-white">
                             {s.users?.full_name ?? 'Sin nombre'}
                           </p>
-                          <p className="text-xs text-white/35">{s.users?.email}</p>
+                          <p className="text-xs text-white/50">{s.users?.email}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
                         {s.users?.qr_code && (
-                          <span className="text-xs font-mono text-white/25 bg-white/5 px-1.5 py-0.5 rounded-lg">
+                          <span className="text-xs font-mono text-white/50 bg-white/5 px-1.5 py-0.5 rounded-lg">
                             QR: {s.users.qr_code.substring(0, 8)}…
                           </span>
                         )}
@@ -802,7 +802,7 @@ export const ClassroomDetailPage = () => {
                           <button
                             onClick={() => handleRemoveStudent(s.student_id)}
                             disabled={removing === s.student_id}
-                            className="text-white/20 hover:text-red-400 transition-colors disabled:opacity-30"
+                            className="text-white/50 hover:text-red-600 transition-colors disabled:opacity-30"
                           >
                             <Trash2 size={14} />
                           </button>
@@ -826,8 +826,8 @@ export const ClassroomDetailPage = () => {
                 </div>
               ) : fullCourses.length === 0 ? (
                 <div className="text-center py-12">
-                  <BookOpen size={32} className="text-white/10 mx-auto mb-3" />
-                  <p className="text-sm text-white/30">No hay cursos en este salón aún.</p>
+                  <BookOpen size={32} className="text-white/50 mx-auto mb-3" />
+                  <p className="text-sm text-white/50">No hay cursos en este salón aún.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -845,8 +845,8 @@ export const ClassroomDetailPage = () => {
 
                   {/* Footer summary */}
                   <div className="flex items-center gap-3 pt-1 border-t border-white/[0.05]">
-                    <TrendingUp size={13} className="text-white/20" />
-                    <span className="text-xs text-white/30">
+                    <TrendingUp size={13} className="text-white/50" />
+                    <span className="text-xs text-white/50">
                       {fullCourses.length} curso{fullCourses.length !== 1 ? 's' : ''} ·{' '}
                       {fullCourses.filter((c) => c.is_published).length} publicado{fullCourses.filter((c) => c.is_published).length !== 1 ? 's' : ''}
                     </span>

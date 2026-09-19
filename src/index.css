@@ -2,139 +2,145 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --ink: 59 42 92; /* deep grape — the "white" of the flipped theme */
+}
+
 @layer base {
   body {
-    background-color: #0C0F0F;
-    color: #ffffff;
-    font-family: 'Lexend', sans-serif;
+    background-color: #FFF7E8;
+    color: rgb(var(--ink));
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
     -webkit-font-smoothing: antialiased;
   }
 
-  input, select, textarea {
-    font-family: 'Lexend', sans-serif;
+  input, select, textarea, button {
+    font-family: 'Nunito', sans-serif;
   }
 
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  /* Kid-size inputs: chunky border, rounded, obvious focus */
+  input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  select,
+  textarea {
+    border-width: 2px;
+    border-radius: 1rem;
   }
 
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
+    background: rgba(124, 77, 255, 0.25);
+    border-radius: 999px;
+    border: 2px solid #FFF7E8;
   }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255, 107, 53, 0.55); }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 107, 53, 0.4);
-  }
+  h1, h2, h3 { font-family: 'Fredoka', 'Nunito', sans-serif; }
 }
 
-/* ── App shell ──────────────────────────────────────────────────────────────
-   bg.base from the app's own palette (constants/theme.ts) — the same
-   neutral the mobile app's admin/teacher/student screens use. Purple is
-   the app's auth-moment color, not a wash over every task screen, so it
-   stays off this shell and lives on the login page instead. */
+/* ── App shell: warm cream, polka dots and soft color blobs ── */
 .app-shell {
   position: relative;
   isolation: isolate;
-  background-color: #0C0F0F;
+  background-color: #FFF7E8;
   background-image:
-    radial-gradient(1100px 620px at 90% -12%, rgba(255, 107, 53, 0.10), transparent 60%),
-    radial-gradient(800px 520px at -8% 6%, rgba(237, 193, 87, 0.045), transparent 55%);
+    radial-gradient(520px 380px at 96% -6%, rgba(255, 201, 60, 0.35), transparent 65%),
+    radial-gradient(520px 420px at -6% 8%, rgba(76, 201, 240, 0.25), transparent 65%),
+    radial-gradient(600px 420px at 60% 112%, rgba(255, 111, 168, 0.18), transparent 65%),
+    radial-gradient(rgba(124, 77, 255, 0.10) 2px, transparent 2.5px);
+  background-size: auto, auto, auto, 28px 28px;
 }
 
-.app-shell::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.045;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
-}
-
-.app-shell > * {
-  position: relative;
-  z-index: 1;
-}
 
 @layer components {
-  /* bg.card from the app palette — one step lighter than bg.base so cards
-     read as lifted, with a faint top sheen for glass rather than flat paint. */
+  /* Cards: white, fat lavender outline, chunky "sticker" shadow */
   .surface {
-    background:
-      linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 45%),
-      #1E2020;
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    background: #FFFFFF;
+    border: 2px solid #EDE3FF;
+    box-shadow: 0 5px 0 0 #EDE3FF;
   }
 
-  /* Second neutral layer (sidebar, drawers) — bg.surface, one step above
-     bg.base so the chrome reads distinct from the content behind it. */
+  /* Sidebar / drawers */
   .panel {
-    background: linear-gradient(180deg, #141717 0%, #0C0F0F 100%);
-    box-shadow: inset -1px 0 0 0 rgba(255, 255, 255, 0.04);
+    background: linear-gradient(180deg, #FFFFFF 0%, #F6F0FF 100%);
+    box-shadow: 4px 0 0 0 #EDE3FF;
   }
 
-  /* Elevated tier (modals) — bg.elevated, a touch brighter than .surface. */
+  /* Modals */
   .elevated {
-    background:
-      linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 40%),
-      #282A2B;
+    background: #FFFFFF;
+    border: 3px solid #EDE3FF;
+    box-shadow: 0 8px 0 0 #EDE3FF, 0 30px 60px -20px rgba(124, 77, 255, 0.35);
   }
 
-  /* ── Button system (per HapticLearn design sheet) ──────────────────────── */
-
+  /* ── Buttons: chunky, squishy, toy-like ── */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 font-semibold text-white bg-[#FF6B35] hover:bg-[#e85c28] rounded-xl transition-colors shadow-[0_4px_20px_rgba(255,107,53,0.35)] disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 font-extrabold text-snow bg-[#FF6B35] rounded-2xl transition-all duration-150
+      shadow-[0_5px_0_0_#D9491A] hover:-translate-y-0.5 hover:shadow-[0_7px_0_0_#D9491A]
+      active:translate-y-1 active:shadow-[0_1px_0_0_#D9491A]
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 font-semibold text-[#FF6B35] bg-[#FF6B35]/[0.06] border border-[#FF6B35]/50 hover:bg-[#FF6B35]/15 hover:border-[#FF6B35] rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 font-extrabold text-[#E4531D] bg-[#FFF0E8] border-2 border-[#FFB99A] rounded-2xl transition-all duration-150
+      shadow-[0_4px_0_0_#FFB99A] hover:-translate-y-0.5 active:translate-y-1 active:shadow-none
+      disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-inverted {
-    @apply inline-flex items-center justify-center gap-2 font-semibold text-[#0C0F0F] bg-white hover:bg-white/90 rounded-xl transition-colors shadow-[0_4px_16px_rgba(255,255,255,0.18)] disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 font-extrabold text-white bg-snow border-2 border-[#EDE3FF] rounded-2xl transition-all duration-150
+      shadow-[0_4px_0_0_#EDE3FF] hover:-translate-y-0.5 active:translate-y-1 active:shadow-none
+      disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-outlined {
-    @apply inline-flex items-center justify-center gap-2 font-medium text-white/70 bg-transparent border border-white/20 hover:border-white/40 hover:text-white rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 font-bold text-white/70 bg-snow border-2 border-[#EDE3FF] hover:border-[#B39DFF] hover:text-white rounded-2xl transition-all duration-150
+      disabled:opacity-50 disabled:cursor-not-allowed;
   }
 }
 
 @keyframes modal-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+  from { opacity: 0; transform: scale(0.85) translateY(20px); }
+  60%  { opacity: 1; transform: scale(1.03) translateY(-2px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
-
-.animate-modal-in {
-  animation: modal-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
+.animate-modal-in { animation: modal-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
 
 @keyframes drawer-in {
   from { transform: translateX(100%); }
   to   { transform: translateX(0); }
 }
+.animate-drawer-in { animation: drawer-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
-.animate-drawer-in {
-  animation: drawer-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.99); }
+  to   { opacity: 1; transform: none; }
+}
+/* backwards (no both): con fill-mode forwards el contenedor conserva un transform y recorta los modales `fixed` hijos */
+.page-in { animation: page-in 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) backwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-modal-in, .animate-drawer-in, .page-in { animation: none; }
 }
 
 .page-title {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Fredoka', sans-serif;
   font-weight: 700;
-  letter-spacing: -0.025em;
-  color: #ffffff;
+  letter-spacing: -0.01em;
+  color: rgb(var(--ink));
   line-height: 1.1;
 }
+
+@keyframes wiggle-slow {
+  0%, 100% { transform: rotate(-3deg) translateY(0); }
+  50%      { transform: rotate(3deg) translateY(-6px); }
+}
+.wiggle-slow { animation: wiggle-slow 3.6s ease-in-out infinite; transform-origin: 50% 90%; }
+@media (prefers-reduced-motion: reduce) { .wiggle-slow { animation: none; } }
+
+/* Contenedor de página: solo opacidad. Un transform aquí haría de bloque contenedor
+   de los modales/cajones `fixed` y los recortaría. */
+@keyframes page-fade { from { opacity: 0; } to { opacity: 1; } }
+.page-fade { animation: page-fade 0.3s ease-out backwards; }
+@media (prefers-reduced-motion: reduce) { .page-fade { animation: none; } }

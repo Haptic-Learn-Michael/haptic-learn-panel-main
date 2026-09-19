@@ -16,18 +16,18 @@ export const Modal = ({
   title,
   subtitle,
   icon: Icon,
-  iconColor = 'text-[#FF6B35]',
+  iconColor = 'text-[#E4531D]',
   iconBg = 'bg-[#FF6B35]/15',
   onClose,
   children,
   maxWidth = 'max-w-md',
 }: ModalProps) => (
-  <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4">
+  <div className="fixed inset-0 bg-[#3B2A5C]/45 backdrop-blur-md flex items-center justify-center z-50 p-4">
     <div
       className={`elevated border border-white/[0.08] rounded-2xl shadow-2xl w-full ${maxWidth} animate-modal-in overflow-hidden`}
     >
       {/* Gradient accent strip */}
-      <div className="h-[3px] bg-gradient-to-r from-[#FF6B35] via-[#FF9A6B] to-[#EDC157]" />
+      <div className="h-[6px] bg-gradient-to-r from-[#FF6B35] via-[#FFC93C] via-[#2FD6A0] to-[#4CC9F0]" />
 
       {/* Header */}
       <div className="flex items-center gap-3 px-6 py-4 border-b border-white/[0.06]">
@@ -38,11 +38,11 @@ export const Modal = ({
         )}
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-white leading-tight">{title}</h3>
-          {subtitle && <p className="text-xs text-white/35 mt-0.5">{subtitle}</p>}
+          {subtitle && <p className="text-xs text-white/50 mt-0.5">{subtitle}</p>}
         </div>
         <button
           onClick={onClose}
-          className="w-8 h-8 rounded-xl flex items-center justify-center text-white/30 hover:text-white hover:bg-white/[0.08] transition-colors flex-shrink-0"
+          className="w-8 h-8 rounded-xl flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.08] transition-colors flex-shrink-0"
         >
           <X size={16} />
         </button>
@@ -62,7 +62,7 @@ export const ModalFooter = ({ children }: { children: ReactNode }) => (
 );
 
 export const ModalError = ({ message }: { message: string }) => (
-  <div className="flex items-start gap-2.5 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl px-3.5 py-3 text-sm">
+  <div className="flex items-start gap-2.5 bg-red-500/10 border border-red-500/20 text-red-600 rounded-xl px-3.5 py-3 text-sm">
     <span className="leading-snug">{message}</span>
   </div>
 );
@@ -86,7 +86,7 @@ export const ModalField = ({
       )}
     </label>
     {children}
-    {hint && <p className="text-xs text-white/25 mt-1.5">{hint}</p>}
+    {hint && <p className="text-xs text-white/50 mt-1.5">{hint}</p>}
   </div>
 );
 
@@ -106,22 +106,22 @@ export const Drawer = ({
   children,
 }: DrawerProps) => (
   <div className="fixed inset-0 z-50 flex justify-end">
-    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+    <div className="absolute inset-0 bg-[#3B2A5C]/45 backdrop-blur-sm" onClick={onClose} />
     <div className="relative panel border-l border-white/[0.08] w-[460px] max-w-[90vw] h-full flex flex-col shadow-2xl animate-drawer-in">
-      <div className="h-[3px] bg-gradient-to-r from-[#FF6B35] via-[#FF9A6B] to-[#EDC157] flex-shrink-0" />
+      <div className="h-[6px] bg-gradient-to-r from-[#FF6B35] via-[#FFC93C] via-[#2FD6A0] to-[#4CC9F0] flex-shrink-0" />
       <div className="flex items-center gap-3 px-5 py-4 border-b border-white/[0.06] flex-shrink-0">
         {Icon && (
           <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-[#FF6B35]/15">
-            <Icon size={18} className="text-[#FF6B35]" />
+            <Icon size={18} className="text-[#E4531D]" />
           </div>
         )}
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-white leading-tight truncate">{title}</h3>
-          {subtitle && <p className="text-xs text-white/35 mt-0.5">{subtitle}</p>}
+          {subtitle && <p className="text-xs text-white/50 mt-0.5">{subtitle}</p>}
         </div>
         <button
           onClick={onClose}
-          className="w-8 h-8 rounded-xl flex items-center justify-center text-white/30 hover:text-white hover:bg-white/[0.08] transition-colors flex-shrink-0"
+          className="w-8 h-8 rounded-xl flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.08] transition-colors flex-shrink-0"
         >
           <X size={16} />
         </button>

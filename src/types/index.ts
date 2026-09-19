@@ -64,13 +64,21 @@ export interface ClassroomStudent {
   users?: { id: string; email: string; full_name: string; status: string; qr_code?: string };
 }
 
+export interface HapticPulse {
+  style: 'Heavy' | 'Medium' | 'Light' | 'Error';
+  durationMs: number;
+  gapMs: number;
+}
+
 export interface HapticPattern {
   id: string;
   pattern_key: string;
   name: string;
-  description?: string;
   category: string;
-  pattern_data: unknown;
+  pulses: HapticPulse[];
+  total_ms: number;
+  intensity_type: string;
+  use_case: string;
   created_at: string;
 }
 
